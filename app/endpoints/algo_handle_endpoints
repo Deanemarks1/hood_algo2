@@ -1,0 +1,25 @@
+
+@app.route("/handle_trade_window", methods=["POST"])
+def handle_trade_window():
+
+    algo_name = session.get("algo_selection")
+
+    start_time = request.form.get("trade_start_time")
+    end_time = request.form.get("trade_end_time")
+
+    run_sql(f"""
+        INSERT INTO admin__algo__trade_window
+        (algo_name, start_time, end_time)
+        VALUES
+        ('{algo_name}', '{start_time}', '{end_time}')
+        ON DUPLICATE KEY UPDATE
+            start_time = VALUES(start_time),
+            end_time = VALUES(end_time),
+            updated_at = NOW()
+    """)
+
+    session["trade_window_updated"] = True
+
+    return redirect("/admin_home")
+
+

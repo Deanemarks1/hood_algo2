@@ -1,0 +1,2520 @@
+{% include 'blocks/page_setup.html' %}
+
+{% include 'blocks/toolbar.html' %}
+
+{% include 'blocks/home_sweet_alerts.html' %}
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- Poppins font (optional but used in styles) -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800;900&display=swap" rel="stylesheet">
+
+
+
+
+
+
+
+
+<div id="algo_debug"></div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    fetch("/api/get_algo_status")
+        .then(response => {
+            console.log("Raw response:", response);
+            return response.json();
+        })
+        .then(data => {
+
+            console.log("Full JSON:", data);
+            console.log("Status value:", data.status);
+
+            const indicator = document.getElementById("algo_indicator");
+            const debug = document.getElementById("algo_debug");
+
+            if (indicator) {
+                indicator.innerText = "STATUS: " + data.status;
+            }
+
+            if (debug) {
+                debug.innerText = "RAW JSON: " + JSON.stringify(data);
+            }
+
+        })
+        .catch(error => {
+            console.log("Fetch error:", error);
+
+            const indicator = document.getElementById("algo_indicator");
+            if (indicator) {
+            }
+        });
+
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Outer contaienr-->
+<div class="wallpaper_background"></div>
+<div class="white_background"></div>
+<div class="page">
+<div class="tiles_wrapper" id="tiles_wrapper">
+
+
+
+
+<!-- ✅ PAGE 1 CONTENT (PUT YOUR ACTUAL BUTTONS HERE) -->
+<div class="tiles_page">
+
+
+
+
+
+
+<!--block global_dashboard_styles_v2-->
+    <style>
+
+            /* Make dropdown_trigger behave exactly like .app */
+        .dropdown_trigger {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.25s ease-in-out;
+        }
+
+        /* Hover scales the WHOLE cluster */
+        .dropdown_trigger:hover {
+            transform: scale(1.03);
+            z-index: 9999;
+        }
+
+        /* Keep the icon + label transitions smooth */
+        .dropdown_trigger .app_icon,
+        .dropdown_trigger .app_label {
+            transition: transform 0.25s ease-in-out;
+        }
+
+
+        /* Make dropdown triggers behave exactly like .app icons */
+        .dropdown_trigger {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.25s ease-in-out;
+        }
+
+        /* When hovering the Website ▾ trigger, scale the whole unit */
+        .dropdown_trigger:hover {
+            transform: scale(1.03);
+            z-index: 9999;
+        }
+
+        /* Smooth scaling for icon + label inside */
+        .dropdown_trigger .app_icon,
+        .dropdown_trigger .app_label {
+            transition: transform 0.25s ease-in-out;
+        }
+
+        /* (Optional but matches .app exactly) */
+        .dropdown_trigger:hover .app_icon {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+
+
+
+
+
+
+        /* ===== BASE IMPORTS ===== */
+        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700;800;900&display=swap');
+
+
+
+
+        /* Smooth transitions for dropdown text */
+        .dropdown_label {
+            display: inline-block;
+            transition: transform 0.25s ease-in-out;
+        }
+
+        /* Hover effect to match .app_label hover */
+        .dropdown_menu a:hover .dropdown_label,
+        .dropdown_menu button:hover .dropdown_label {
+            transform: scale(1.08);
+        }
+
+
+
+
+
+
+        :root {
+            --ink: #0f172a;
+            --blue: #3c92f2;
+            --shadow: 0 2px 4px rgba(0,0,0,.04);
+        }
+
+        /* ===== GLOBAL LAYOUT ===== */
+        html, body {
+            margin: 0;
+            background: #fff;
+            color: var(--ink);
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            height: 100% !important;
+            position: relative;
+        }
+
+        a {
+            text-decoration: none !important;
+            color: inherit;
+        }
+
+        .wallpaper_background,
+        .white_background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+
+        .white_background {
+            background: white;
+            opacity: 0.75;
+            z-index: -2;
+        }
+
+        .page {
+            width: 86%;
+            margin: 40px auto 0;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        /* ===== TILE LAYOUT ===== */
+        .tiles_wrapper {
+            display: flex;
+            flex-wrap: nowrap;
+            transition: transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+            will-change: transform;
+            width: 100%;
+        }
+
+        .tiles_page {
+            flex: 0 0 100%;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-rows: repeat(3, auto);
+            gap: 60px;
+            justify-items: center;
+            align-items: start;
+            padding-top: 10px;
+            box-sizing: border-box;
+        }
+
+        .app {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.25s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .app_icon {
+            width: 130px;
+            height: 135px;
+            border-radius: 27px;
+            display: grid;
+            place-items: center;
+            font-size: 70px;
+            box-shadow: var(--shadow);
+            transition: transform 0.25s ease-in-out, box-shadow 0.25s ease-in-out;
+        }
+
+        .app_label {
+            margin-top: 10px;
+            font-weight: 900;
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            position: relative;
+            z-index: 1;
+            transition: transform 0.25s ease-in-out;
+        }
+
+        /* ✅ Hover effect */
+        .app:hover .app_icon,
+        .app:hover .app_label {
+            transform: scale(1.08);
+            z-index: 9999;
+        }
+
+        .app:hover .app_icon {
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        /* ===== PAGINATION DOTS ===== */
+        .pagination_dots {
+            text-align: center;
+            margin: 40px auto 100px;
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+        }
+
+        .dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #d0d7e2;
+            cursor: pointer;
+            transition: all 0.35s ease;
+        }
+
+        .dot.active {
+            background: var(--blue);
+            transform: scale(1.1);
+        }
+
+        /* ===== DROPDOWNS ===== */
+        .dropdown_wrapper {
+            position: relative;
+            display: inline-block;
+            z-index: 4000;
+        }
+
+        .dropdown_trigger {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.25s ease-in-out;
+        }
+
+        .dropdown_trigger:hover .app_icon {
+            transform: scale(1.08);
+            z-index: 999;
+        }
+
+        .dropdown_trigger .app_label {
+            margin-top: 10px;
+            font-weight: 900;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            text-align: center;
+            width: 165px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dropdown_menu {
+            position: fixed;
+            display: none;
+            flex-direction: column;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            padding: 10px 0;
+            overflow: hidden;
+            min-width: 260px;
+            z-index: 99999;
+            animation: dropdownFadeIn 0.25s ease;
+        }
+
+        @keyframes dropdownFadeIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dropdown_menu a,
+        .dropdown_menu button {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 14px 22px;
+            background: none;
+            border: none;
+            color: #111827;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 15px;
+            text-align: left;
+            transition: all 0.25s ease-in-out;
+            cursor: pointer;
+        }
+
+        .dropdown_menu a i,
+        .dropdown_menu button i {
+            font-size: 17px;
+            color: #3c92f2;
+            width: 22px;
+            text-align: center;
+        }
+
+        .dropdown_menu a:hover,
+        .dropdown_menu button:hover {
+            background: #e8f0fe;
+            color: #0f5ed6;
+            padding-left: 26px;
+        }
+
+        .dropdown_divider {
+            height: 1px;
+            background: #e5e7eb;
+            margin: 6px 0;
+        }
+
+        /* ===== SWEETALERT2 MODALS ===== */
+        .swal2-popup.default-modal {
+            border-radius: 18px !important;
+            overflow: hidden !important;
+            padding: 0 !important;
+            background: #fff !important;
+            width: min(640px, 95%) !important;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.25) !important;
+        }
+
+        .swal2-html-container {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .modal-scroll-content {
+            padding: 28px 40px 40px !important;
+            font-family: 'Poppins', sans-serif !important;
+            font-size: 16px !important;
+            color: #1e293b !important;
+            text-align: left !important;
+            line-height: 1.6 !important;
+        }
+
+        .swal2-actions {
+            display: flex !important;
+            justify-content: center !important;
+            gap: 15px !important;
+            padding-bottom: 25px !important;
+        }
+
+        .swal2-confirm,
+        .swal2-cancel {
+            border-radius: 8px !important;
+            font-weight: 700 !important;
+            font-family: 'Poppins', sans-serif !important;
+            padding: 12px 28px !important;
+            font-size: 15px !important;
+            border: none !important;
+            cursor: pointer !important;
+            transition: all 0.25s ease-in-out !important;
+        }
+
+        .swal2-confirm {
+            background: #3c92f2 !important;
+            color: #fff !important;
+        }
+
+        .swal2-confirm:hover { background: #1e7ae2 !important; }
+        .swal2-cancel { background: #6b7280 !important; color: #fff !important; }
+        .swal2-cancel:hover { background: #4b5563 !important; }
+
+        .swal2-container.swal2-backdrop-show {
+            background: rgba(15,23,42,0.55) !important;
+            backdrop-filter: blur(8px) !important;
+            -webkit-backdrop-filter: blur(8px) !important;
+            z-index: 99999 !important;
+        }
+
+        /* ===== MOBILE OPTIMIZATIONS ===== */
+        @media (max-width: 720px) {
+            .page { margin: 25px auto 90px; width: 98%; }
+
+            .tiles_page {
+                grid-template-columns: repeat(3, 1fr);
+                grid-template-rows: repeat(4, auto);
+                gap: 25px 0;
+                padding-top: 10px;
+                justify-items: center;
+                align-content: start;
+                padding-bottom: 50px;
+            }
+
+            .app_icon,
+            .dropdown_trigger .app_icon {
+                width: 80px;
+                height: 80px;
+                font-size: 40px;
+                border-radius: 16px;
+            }
+
+            .app_label,
+            .dropdown_trigger .app_label {
+                font-size: 10px;
+                font-weight: 800;
+                margin-top: 5px;
+                width: 100px;
+            }
+
+            .dropdown_menu {
+                min-width: 85%;
+                border-radius: 12px;
+                padding: 8px 0;
+                left: 50% !important;
+                transform: translateX(-50%) !important;
+                margin-left: 0 !important;
+            }
+
+            .dropdown_menu a,
+            .dropdown_menu button {
+                font-size: 14px;
+                padding: 12px 18px;
+            }
+
+            .pagination_dots { margin: 40px auto 70px; gap: 10px; }
+            .dot { width: 12px; height: 12px; }
+
+            .swal2-popup.default-modal {
+                width: 92% !important;
+                border-radius: 16px !important;
+            }
+
+            .modal-scroll-content {
+                padding: 22px 24px 28px !important;
+                font-size: 15px !important;
+            }
+
+            .swal2-actions {
+                flex-direction: column !important;
+                gap: 10px !important;
+                padding: 0 24px 24px !important;
+            }
+
+            .swal2-confirm,
+            .swal2-cancel {
+                width: 100% !important;
+            }
+        }
+    </style>
+
+
+
+    <style>
+        .dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #d1d5db;
+            transition: all 0.3s ease-in-out;
+            cursor: pointer;
+        }
+
+        .dot.active {
+            background: #3c92f2;
+            transform: scale(1.3);
+        }
+
+        #pagination_dots {
+            position: relative;
+            z-index: 9999;
+        }
+
+        /* ✅ Raise dots on mobile */
+        @media (max-width: 768px) {
+            #pagination_dots {
+                margin-top: 20px;
+                transform: translateY(-30px);
+            }
+
+            .dot {
+                width: 14px;
+                height: 14px;
+            }
+        }
+    </style> 
+<!--block global_dashboard_styles_v2-->
+
+
+
+
+
+
+<style>
+    /* =============================================
+       SMART MOBILE AUTO-SCALE FOR TILE GRID (v2)
+       ============================================= */
+    @media (max-width: 720px) {
+
+        :root {
+            --tile-size: min(40vw, 100px);      /* 🔥 bigger icons */
+            --tile-gap-v: 34px;                 /* 🔥 more vertical spacing */
+            --pagination-space: 85px;
+            --tile-gap-h: 6px;                  /* 🔥 tighter left/right spacing */
+        }
+
+        /* ---------- Medium-height screens ---------- */
+        @media (max-height: 820px) {
+            :root {
+                --tile-size: min(32vw, 95px);
+                --tile-gap-v: 30px;
+                --pagination-space: 75px;
+                --tile-gap-h: 4px;
+            }
+        }
+
+        /* ---------- Shorter screens ---------- */
+        @media (max-height: 740px) {
+            :root {
+                --tile-size: min(30vw, 88px);
+                --tile-gap-v: 26px;
+                --pagination-space: 65px;
+                --tile-gap-h: 4px;
+            }
+        }
+
+        @media (max-height: 680px) {
+            :root {
+                --tile-size: min(28vw, 80px);
+                --tile-gap-v: 22px;
+                --pagination-space: 58px;
+                --tile-gap-h: 3px;
+            }
+        }
+
+        @media (max-height: 620px) {
+            :root {
+                --tile-size: min(25vw, 74px);
+                --tile-gap-v: 18px;
+                --pagination-space: 50px;
+                --tile-gap-h: 3px;
+            }
+        }
+
+        /* =========================================
+           APPLY SCALING
+           ========================================= */
+        .tiles_page {
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(4, auto);
+
+            /* 🔥 tighter left/right spacing, bigger rows */
+            column-gap: var(--tile-gap-h);
+            row-gap: var(--tile-gap-v);
+
+            padding-top: 12px;
+            padding-bottom: var(--pagination-space);
+        }
+
+        /* ---------- ICON ---------- */
+        .app_icon,
+        .dropdown_trigger .app_icon {
+            width: var(--tile-size);
+            height: var(--tile-size);
+
+            /* 🔥 icon symbol inside is bigger now */
+            font-size: calc(var(--tile-size) * 0.57);
+
+            border-radius: 18px;
+            transition: transform 0.25s ease-in-out;
+        }
+
+        /* ---------- LABEL ---------- */
+        .app_label,
+        .dropdown_trigger .app_label {
+            font-size: calc(var(--tile-size) * 0.14);
+            width: calc(var(--tile-size) * 1.37);
+            margin-top: 9px;
+            line-height: 1.15;
+        }
+
+        /* ---------- PAGINATION DOTS ---------- */
+        #pagination_dots {
+            margin-bottom: 18px !important;
+            padding-bottom: 8px !important;
+            z-index: 9999;
+            position: relative;
+        }
+    }
+
+
+
+    /* SPECIAL FIX FOR iPhone 12 / 12 Pro / 13 / 14 / 15 (height ≈ 844px) */
+    @media (max-width: 720px) and (min-height: 820px) and (max-height: 900px) {
+        :root {
+            --tile-size: min(32vw, 92px);   /* slightly smaller */
+            --tile-gap-v: 28px;             /* give more vertical room */
+            --pagination-space: 90px;       /* ensure dots fit */
+            --tile-gap-h: 4px;              /* comfortable left/right */
+        }
+    }
+    /* =============================================
+       TABLET PORTRAIT (Surface Pro, iPad, Galaxy Tab)
+       ============================================= */
+    @media (min-width: 721px) and (max-width: 1024px) and (orientation: portrait) {
+
+        :root {
+            --tile-size: 120px;       /* bigger icons on tablets */
+            --tile-gap-v: 30px;       /* tighter spacing */
+            --tile-gap-h: 12px;       /* reduce left/right space */
+            --pagination-space: 90px; /* nice bottom breathing room */
+        }
+
+        .tiles_page {
+            grid-template-columns: repeat(3, 1fr); /* 3 per row */
+            gap: var(--tile-gap-v) var(--tile-gap-h);
+            padding-top: 0px;
+            padding-bottom: var(--pagination-space);
+        }
+
+        .app_icon,
+        .dropdown_trigger .app_icon {
+            width: var(--tile-size);
+            height: var(--tile-size);
+            font-size: calc(var(--tile-size) * 0.50);
+            border-radius: 22px;
+        }
+
+        .app_label,
+        .dropdown_trigger .app_label {
+            font-size: 17px;
+            width: 120px;
+            margin-top: 8px;
+            letter-spacing: .4px;
+        }
+
+        #pagination_dots {
+            margin-top: 20px;
+            margin-bottom: 25px;
+        }
+    }
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--block global_dropdown_engine_v1-->
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+        let dropdownLock = false;
+
+        function closeAllDropdowns() {
+            document.querySelectorAll(".dropdown_menu").forEach(menu => {
+                menu.style.display = "none";
+                menu.removeAttribute("data-open");
+                menu.style.visibility = "hidden";
+            });
+        }
+
+        // Close when clicking outside
+        document.addEventListener("click", e => {
+            const trigger = e.target.closest(".dropdown_trigger");
+            const menu = e.target.closest(".dropdown_menu");
+
+            if (!trigger && !menu) closeAllDropdowns();
+        });
+
+        window.addEventListener("scroll", closeAllDropdowns);
+        window.addEventListener("resize", closeAllDropdowns);
+
+        // Attach dropdown logic
+        document.querySelectorAll(".dropdown_wrapper").forEach(wrapper => {
+            const trigger = wrapper.querySelector(".dropdown_trigger");
+            const menu = wrapper.querySelector(".dropdown_menu");
+
+            if (!trigger || !menu) return;
+
+            // Move all menus to body (higher z-index)
+            document.body.appendChild(menu);
+
+            trigger.addEventListener("click", async e => {
+                e.stopPropagation();
+
+                if (dropdownLock) return;
+                dropdownLock = true;
+
+                const isOpen = menu.dataset.open === "true";
+
+                if (isOpen) {
+                    closeAllDropdowns();
+                    dropdownLock = false;
+                    return;
+                }
+
+                closeAllDropdowns();
+
+                // Pre-render invisible
+                menu.style.display = "block";
+                menu.style.visibility = "hidden";
+                menu.dataset.open = "true";
+
+                await new Promise(r => requestAnimationFrame(r));
+
+                // Position menu
+                const rect = trigger.getBoundingClientRect();
+                const scrollX = window.scrollX || document.documentElement.scrollLeft;
+                const scrollY = window.scrollY || document.documentElement.scrollTop;
+
+                const top = rect.bottom + scrollY + 6;
+                const left = rect.left + scrollX + (rect.width / 2) - (menu.offsetWidth / 2);
+
+                menu.style.top = `${top}px`;
+                menu.style.left = `${left}px`;
+                menu.style.visibility = "visible";
+                menu.style.display = "flex";
+
+                // Prevent menu bottom-cut
+                const menuRect = menu.getBoundingClientRect();
+                const overflow = menuRect.bottom - window.innerHeight;
+                if (overflow > 0) {
+                    menu.style.top = `${top - overflow - 12}px`;
+                }
+
+                menu.style.animation = "dropdownFadeIn .25s ease";
+
+                setTimeout(() => dropdownLock = false, 80);
+            });
+        });
+
+    });
+    </script>
+
+    <style>
+    @keyframes dropdownFadeIn {
+        from { opacity:0; transform: translateY(-6px); }
+        to   { opacity:1; transform: translateY(0); }
+    }
+    </style>
+<!--block global_dropdown_engine_v1-->
+
+
+
+
+
+
+
+
+<!-- algos_dropdown_v10_clean_uniform-->
+    <div class="dropdown_wrapper" id="algos_dropdown_v10">
+        <a class="dropdown_trigger">
+            <div class="app_icon algo_uniform_color">
+                <i class="fa-solid fa-diagram-project"></i>
+            </div>
+
+            <div class="app_label">
+                {{ session_data.algo_name }} ▾
+            </div>
+        </a>
+
+        <div class="dropdown_menu" id="algos_menu_v10">
+
+            <!-- MASTER -->
+            <form method="POST" action="/show_master_page">
+                <button type="submit" class="dropdown_row {% if session_data.algo_name == 'Master' %}selected_algo{% endif %}">
+                    <div class="left_group">
+                        <i class="fa-solid fa-star master_icon"></i>
+                        <span>Master</span>
+                    </div>
+
+                    {% if session_data.algo_name == 'Master' %}
+                        <i class="fa-solid fa-check check_icon"></i>
+                    {% endif %}
+                </button>
+            </form>
+
+            {% for name in ['Alpha','Beta','Gamma','Delta'] %}
+            <form method="POST" action="/handle_algo_selection">
+                <input type="hidden" name="algo_selection" value="{{ name }}">
+                <button type="submit" class="dropdown_row {% if session_data.algo_name == name %}selected_algo{% endif %}">
+                    <div class="left_group">
+                        <i class="fa-solid fa-sliders slider_icon"></i>
+                        <span>{{ name }}</span>
+                    </div>
+
+                    {% if session_data.algo_name == name %}
+                        <i class="fa-solid fa-check check_icon"></i>
+                    {% endif %}
+                </button>
+            </form>
+            {% endfor %}
+
+        </div>
+    </div>
+
+    <style>
+        .algo_uniform_color {
+            background-color: #e2e8f0;  /* calm neutral slate */
+        }
+
+        #algos_menu_v10 form { margin: 0; }
+
+        .dropdown_row {
+            all: unset;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 10px 14px;
+            cursor: pointer;
+        }
+
+        .left_group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .dropdown_row:hover {
+            background: #f1f5f9;
+        }
+
+        .selected_algo {
+            background-color: #e2e8f0;
+            font-weight: 600;
+        }
+
+        .check_icon {
+            color: #2563eb;
+        }
+
+        .master_icon {
+            color: #f59e0b;  /* subtle gold accent only */
+        }
+
+        .slider_icon {
+            color: #64748b;  /* muted slate */
+        }
+    </style>
+<!-- algos_dropdown_v10_clean_uniform-->
+
+
+
+
+
+
+<!--block system_status_button_v1-->
+
+    <div class="dropdown_wrapper" id="system_status_button_v1">
+
+        <a id="open_system_running_modal"
+           class="dropdown_trigger"
+           role="button"
+           style="cursor:pointer;">
+
+            <div id="system_status_icon_v1"
+                 class="app_icon system_icon_base_v1">
+
+                <i id="system_status_gear_v1"
+                   class="fa-solid fa-gear system_gear_v1"></i>
+
+            </div>
+
+            <div id="system_status_label_v1"
+                 class="app_label">
+                Loading ▾
+            </div>
+
+        </a>
+
+    </div>
+
+
+    <style>
+
+        .system_icon_base_v1 {
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            transition: all .3s ease;
+        }
+
+        .system_gear_v1 {
+            font-size:75px;
+        }
+
+        @media (max-width:768px){
+            .system_gear_v1 { font-size:49px; }
+        }
+
+        .spin_v1 {
+            animation: slow_spin_v1 6s linear infinite;
+        }
+
+        @keyframes slow_spin_v1 {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+
+        .status_on_v1 {
+            background:#dcfce7;
+            color:#16a34a;
+        }
+
+        .status_test_v1 {
+            background:#fef3c7;
+            color:#f59e0b;
+        }
+
+        .status_off_v1 {
+            background:#fee2e2;
+            color:#dc2626;
+        }
+
+    </style>
+
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            fetch("/api/get_algo_status")
+                .then(res => res.text())
+                .then(status => {
+
+                    status = status.trim().toLowerCase();
+
+                    const icon  = document.getElementById("system_status_icon_v1");
+                    const gear  = document.getElementById("system_status_gear_v1");
+                    const label = document.getElementById("system_status_label_v1");
+
+                    icon.classList.remove(
+                        "status_on_v1",
+                        "status_test_v1",
+                        "status_off_v1"
+                    );
+
+                    gear.classList.remove("spin_v1");
+
+                    //////////////////////////////////////////////////////
+                    // ON
+                    //////////////////////////////////////////////////////
+                    if (status === "on") {
+
+                        icon.classList.add("status_on_v1");
+                        gear.classList.add("spin_v1");
+                        label.innerText = "Running - Live ▾";
+
+                    }
+
+                    //////////////////////////////////////////////////////
+                    // TEST
+                    //////////////////////////////////////////////////////
+                    else if (status === "test") {
+
+                        icon.classList.add("status_test_v1");
+                        gear.classList.add("spin_v1");
+                        label.innerText = "Running - Test ▾";
+
+                    }
+
+                    //////////////////////////////////////////////////////
+                    // OFF
+                    //////////////////////////////////////////////////////
+                    else {
+
+                        icon.classList.add("status_off_v1");
+                        label.innerText = "Stopped ▾";
+
+                    }
+
+                });
+
+        });
+
+    </script>
+
+<!--block system_status_button_v1-->
+
+
+
+
+
+
+
+
+<!--block schedule_button_v8-->
+    <div class="dropdown_wrapper" id="run_schedule_button_v8">
+
+        <a href="#"
+           id="open_run_schedule_btn_v8"
+           class="dropdown_trigger">
+
+            <div class="app_icon" style="background-color:#c4d2e5;">
+                <i class="fa-solid fa-calendar-days"></i>
+            </div>
+
+            <div class="app_label">
+                Schedule ▾
+            </div>
+
+        </a>
+
+    </div>
+<!--block schedule_button_v8-->
+
+
+
+
+
+
+
+
+
+
+
+<!--block trade_window_button_v6-->
+    <div class="dropdown_wrapper" id="trade_window_button_v6">
+
+        <a href="#" id="open_trade_window_btn_v6" class="dropdown_trigger">
+            <div class="app_icon" style="background-color:#e7a49d;">
+                <i class="fa-solid fa-clock"></i>
+            </div>
+            <div class="app_label">Trade Window ▾</div>
+        </a>
+
+    </div>
+<!--block trade_window_button_v6-->
+
+
+
+
+
+
+
+
+
+<!--block scraper_inputs_button_v6-->
+    <div class="dropdown_wrapper" id="scraper_inputs_button_v6">
+
+        <a href="#" id="open_scraper_inputs_btn_v6" class="dropdown_trigger">
+            <div class="app_icon" style="background-color:#ede9fe;">
+                <i class="fa-solid fa-cloud-arrow-down"></i>
+            </div>
+            <div class="app_label">Scraper Inputs ▾</div>
+        </a>
+
+    </div>
+<!--block scraper_inputs_button_v6-->
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- filter_controls_button_v2-->
+    <div class="dropdown_wrapper" id="filter_controls_button_v2">
+
+        <a href="#" id="open_fundamental_filters_btn_v2" class="dropdown_trigger">
+            <div class="app_icon" style="background-color:#dcfce7;">
+                <i class="fa-solid fa-filter"></i>
+            </div>
+            <div class="app_label">Stock Filters ▾</div>
+        </a>
+
+    </div>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const btn = document.getElementById("open_fundamental_filters_btn_v2");
+        const overlay = document.getElementById("fundamental_filters_overlay_v1");
+
+        btn.addEventListener("click", function (e) {
+            e.preventDefault();
+            overlay.style.display = "flex";
+        });
+
+    });
+    </script>
+<!-- filter_controls_button_v2-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- model_weights_button_v4-->
+    <div class="dropdown_wrapper" id="model_weights_button_v4">
+
+        <a href="#" id="open_model_weights_btn_v4" class="dropdown_trigger">
+            <div class="app_icon" style="background-color:#ede9fe;">
+                <i class="fa-solid fa-sliders"></i>
+            </div>
+            <div class="app_label">Model Weights ▾</div>
+        </a>
+
+    </div>
+<!-- model_weights_button_v4-->
+
+
+
+
+
+
+
+
+<!-- trade_rules_button_v4-->
+    <div class="dropdown_wrapper" id="trade_rules_button_v4">
+
+        <a href="#" id="open_trade_rules_btn_v4" class="dropdown_trigger">
+            <div class="app_icon" style="background-color:#82a7b3;">
+                <i class="fa-solid fa-gavel"></i>
+            </div>
+            <div class="app_label">Trade Rules ▾</div>
+        </a>
+
+    </div>
+<!-- trade_rules_button_v4-->
+
+
+
+
+
+
+
+
+<!-- rebalance_logic_button_v3-->
+    <div class="dropdown_wrapper" id="rebalance_logic_button_v2">
+
+        <a href="#"
+           id="open_rebalance_logic_btn_v2"
+           class="dropdown_trigger">
+
+            <div class="app_icon" style="background-color:#9aa78f;">
+                <i class="fa-solid fa-arrows-rotate"></i>
+            </div>
+
+            <div class="app_label">
+                Reposition ▾
+            </div>
+
+        </a>
+
+    </div>
+<!-- rebalance_logic_button_v3-->
+
+
+
+
+
+
+<!-- trade_history_button_v7-->
+
+    <div class="dropdown_wrapper" id="trade_history_dropdown_v1">
+
+        <a href="#"
+           id="open_trade_history_menu_btn_v1"
+           class="dropdown_trigger">
+
+            <div class="app_icon" style="background-color:#62618d;">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+            </div>
+
+            <div class="app_label">
+                Trade History ▾
+            </div>
+
+        </a>
+
+        <div class="dropdown_menu" id="trade_history_menu_v1">
+
+            <a href="#" id="trade_history_1d_v1">
+                <i class="fa-solid fa-calendar-day"></i>
+                1 Day
+            </a>
+
+            <a href="#" id="trade_history_1w_v1">
+                <i class="fa-solid fa-calendar-week"></i>
+                1 Week
+            </a>
+
+            <a href="#" id="trade_history_1m_v1">
+                <i class="fa-solid fa-calendar"></i>
+                1 Month
+            </a>
+
+            <a href="#" id="trade_history_1y_v1">
+                <i class="fa-solid fa-calendar-alt"></i>
+                1 Year
+            </a>
+
+            <a href="#" id="trade_history_all_v1">
+                <i class="fa-solid fa-database"></i>
+                All
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- Trade History Modal -->
+    <div id="trade_history_overlay_v1" class="modal_overlay">
+
+        <div class="modal_container" style="max-width:1000px;">
+
+            <div class="modal_header">
+                <div class="modal_title" id="trade_history_modal_title_v1">
+                    Trade History
+                </div>
+                <div class="modal_close" id="trade_history_close_v1">
+                    &times;
+                </div>
+            </div>
+
+            <div class="modal_body"
+                 id="trade_history_content_v1"
+                 style="max-height:500px; overflow-y:auto; padding:0;">
+
+                <div style="padding:20px;">
+                    Loading...
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+        <script>
+        document.addEventListener("DOMContentLoaded", () => {
+
+            const overlay   = document.getElementById("trade_history_overlay_v1");
+            const closeBtn  = document.getElementById("trade_history_close_v1");
+            const content   = document.getElementById("trade_history_content_v1");
+            const titleEl   = document.getElementById("trade_history_modal_title_v1");
+            const menu      = document.getElementById("trade_history_menu_v1");
+
+            const rangeSignals = {
+                trade_history_1d_v1:  "1d",
+                trade_history_1w_v1:  "1w",
+                trade_history_1m_v1:  "1m",
+                trade_history_1y_v1:  "1y",
+                trade_history_all_v1: "all"
+            };
+
+            Object.keys(rangeSignals).forEach(id => {
+
+                const el = document.getElementById(id);
+                if (!el) return;
+
+                el.addEventListener("click", (e) => {
+
+                    e.preventDefault();
+
+                    /* ------------------------------
+                       CLOSE THIS DROPDOWN
+                    ------------------------------ */
+                    if (menu) {
+                        menu.style.display = "none";
+                    }
+
+                    /* ------------------------------
+                       CLOSE ANY GLOBAL DROPDOWNS
+                    ------------------------------ */
+                    if (typeof closeAllDropdowns === "function") {
+                        closeAllDropdowns();
+                    }
+
+                    const range = rangeSignals[id];
+
+                    overlay.style.display = "flex";
+                    document.body.style.overflow = "hidden";
+
+                    titleEl.innerText = `Trade History — ${range.toUpperCase()}`;
+
+                    content.innerHTML = `
+                        <div style="padding:20px;">
+                            Loading ${range.toUpperCase()} trades...
+                        </div>
+                    `;
+
+                    fetch(`/api/trade_history?range=${range}`)
+                        .then(res => res.json())
+                        .then(data => {
+
+                            if (!data.success || !data.trades.length) {
+                                content.innerHTML = `
+                                    <div style="padding:20px;">
+                                        No trades found.
+                                    </div>
+                                `;
+                                return;
+                            }
+
+                            let table = `
+                                <table style="width:100%; border-collapse:collapse; font-size:14px;">
+                                    <thead>
+                                        <tr>
+                                            <th style="
+                                                position:sticky;
+                                                top:0;
+                                                background:#000;
+                                                color:#fff;
+                                                padding:16px 12px;
+                                                font-size:16px;
+                                                font-weight:800;
+                                                text-align:left;
+                                                z-index:5;
+                                            ">Date</th>
+                                            <th style="position:sticky; top:0; background:#000; color:#fff; padding:16px 12px; font-size:16px; font-weight:800;">Ticker</th>
+                                            <th style="position:sticky; top:0; background:#000; color:#fff; padding:16px 12px; font-size:16px; font-weight:800;">Side</th>
+                                            <th style="position:sticky; top:0; background:#000; color:#fff; padding:16px 12px; font-size:16px; font-weight:800;">Qty</th>
+                                            <th style="position:sticky; top:0; background:#000; color:#fff; padding:16px 12px; font-size:16px; font-weight:800;">Price</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                            `;
+
+                            data.trades.forEach(trade => {
+
+                                const sideColor = trade.side === "BUY"
+                                    ? "#16a34a"
+                                    : "#dc2626";
+
+                                table += `
+                                    <tr style="border-bottom:1px solid #e5e7eb;">
+                                        <td style="padding:12px;">${trade.date}</td>
+                                        <td style="padding:12px; font-weight:600;">${trade.ticker}</td>
+                                        <td style="padding:12px; font-weight:700; color:${sideColor};">
+                                            ${trade.side}
+                                        </td>
+                                        <td style="padding:12px;">${trade.qty}</td>
+                                        <td style="padding:12px;">$${trade.price}</td>
+                                    </tr>
+                                `;
+                            });
+
+                            table += "</tbody></table>";
+                            content.innerHTML = table;
+
+                        })
+                        .catch(() => {
+
+                            content.innerHTML = `
+                                <div style="padding:20px;">
+                                    Server error loading trades.
+                                </div>
+                            `;
+                        });
+
+                });
+
+            });
+
+            /* ------------------------------
+               CLOSE MODAL BUTTON
+            ------------------------------ */
+            if (closeBtn) {
+                closeBtn.addEventListener("click", () => {
+                    overlay.style.display = "none";
+                    document.body.style.overflow = "auto";
+                });
+            }
+
+            /* ------------------------------
+               CLICK OUTSIDE TO CLOSE
+            ------------------------------ */
+            if (overlay) {
+                overlay.addEventListener("click", e => {
+                    if (e.target === overlay) {
+                        overlay.style.display = "none";
+                        document.body.style.overflow = "auto";
+                    }
+                });
+            }
+
+        });
+    </script>
+<!-- trade_history_button_v7-->
+
+
+
+
+
+<!-- performance_button_v4-->
+
+    <div class="dropdown_wrapper" id="performance_dropdown_v1">
+
+        <a href="#"
+           id="open_performance_modal_btn_v1"
+           class="dropdown_trigger">
+
+            <div class="app_icon" style="background-color:#6c86b4;">
+                <i class="fa-solid fa-chart-line"></i>
+            </div>
+
+            <div class="app_label">
+                Performance ▾
+            </div>
+
+        </a>
+
+        <div class="dropdown_menu" id="performance_menu_v1">
+
+            <a href="#" data-range="1d">
+                <i class="fa-solid fa-calendar-day"></i>
+                1 Day
+            </a>
+
+            <a href="#" data-range="1w">
+                <i class="fa-solid fa-calendar-week"></i>
+                1 Week
+            </a>
+
+            <a href="#" data-range="1m">
+                <i class="fa-solid fa-calendar"></i>
+                1 Month
+            </a>
+
+            <a href="#" data-range="1y">
+                <i class="fa-solid fa-calendar-alt"></i>
+                1 Year
+            </a>
+
+            <a href="#" data-range="all">
+                <i class="fa-solid fa-database"></i>
+                All
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const trigger   = document.getElementById("open_performance_modal_btn_v1");
+            const menu      = document.getElementById("performance_menu_v1");
+
+            const overlay   = document.getElementById("performance_overlay_v1");
+            const chartDiv  = document.getElementById("performance_chart_container_v1");
+            const titleEl   = document.getElementById("performance_modal_title_v1");
+
+            ////////////////////////////////////////////////////////////
+            // Toggle dropdown
+            ////////////////////////////////////////////////////////////
+
+            if (trigger && menu) {
+
+                trigger.addEventListener("click", function (e) {
+
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    menu.classList.toggle("show");
+
+                });
+
+            }
+
+            ////////////////////////////////////////////////////////////
+            // Close dropdown if clicking outside
+            ////////////////////////////////////////////////////////////
+
+            document.addEventListener("click", function (e) {
+
+                if (menu && trigger) {
+                    if (!menu.contains(e.target) && !trigger.contains(e.target)) {
+                        closeDropdown();
+                    }
+                }
+
+            });
+
+            ////////////////////////////////////////////////////////////
+            // FORCE CLOSE FUNCTION
+            ////////////////////////////////////////////////////////////
+
+            function closeDropdown() {
+
+                if (!menu) return;
+
+                menu.classList.remove("show");
+                menu.style.display = "none";
+
+                // Force reflow protection
+                void menu.offsetHeight;
+
+            }
+
+            ////////////////////////////////////////////////////////////
+            // Range Selection
+            ////////////////////////////////////////////////////////////
+
+            if (!menu) return;
+
+            const items = menu.querySelectorAll("a");
+
+            let Y = 0;
+
+            while (Y < items.length) {
+
+                const item = items[Y];
+
+                item.addEventListener("click", function (e) {
+
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    ////////////////////////////////////////////////////////////
+                    // HARD CLOSE DROPDOWN
+                    ////////////////////////////////////////////////////////////
+
+                    closeDropdown();
+
+                    const range = item.dataset.range;
+
+                    if (!overlay || !chartDiv || !titleEl) {
+                        console.error("Performance modal elements missing.");
+                        return;
+                    }
+
+                    overlay.style.display = "flex";
+                    document.body.style.overflow = "hidden";
+
+                    titleEl.innerText = "Performance — " + range.toUpperCase();
+
+                    ////////////////////////////////////////////////////////////
+                    // Fetch Data
+                    ////////////////////////////////////////////////////////////
+
+                    fetch("/api/performance_timeseries?range=" + range)
+                        .then(res => res.json())
+                        .then(data => {
+
+                            if (!data.success) {
+                                chartDiv.innerHTML = "Error loading performance data.";
+                                return;
+                            }
+
+                            ////////////////////////////////////////////////////////////
+                            // Build Traces
+                            ////////////////////////////////////////////////////////////
+
+                            const trace_algo = {
+                                x: data.dates,
+                                y: data.algo,
+                                mode: "lines",
+                                name: data.algo_name,
+                                line: { width: 3 }
+                            };
+
+                            const trace_nasdaq = {
+                                x: data.dates,
+                                y: data.nasdaq,
+                                mode: "lines",
+                                name: "NASDAQ",
+                                line: { dash: "dot", width: 2 }
+                            };
+
+                            const trace_sp = {
+                                x: data.dates,
+                                y: data.sp500,
+                                mode: "lines",
+                                name: "S&P 500",
+                                line: { dash: "dash", width: 2 }
+                            };
+
+                            ////////////////////////////////////////////////////////////
+                            // Layout
+                            ////////////////////////////////////////////////////////////
+
+                            const layout = {
+                                margin: { t: 20, r: 20, l: 40, b: 40 },
+                                legend: { orientation: "h" },
+                                xaxis: { showgrid: false },
+                                yaxis: { showgrid: true, zeroline: false }
+                            };
+
+                            Plotly.newPlot(
+                                chartDiv,
+                                [trace_algo, trace_nasdaq, trace_sp],
+                                layout,
+                                { responsive: true }
+                            );
+
+                        })
+                        .catch(function () {
+
+                            chartDiv.innerHTML = "Failed to load performance data.";
+
+                        });
+
+                });
+
+                Y += 1;
+            }
+
+        });
+    </script>
+<!-- performance_button_v4-->
+
+
+
+
+
+<!-- stock_universe_dropdown_v3-->
+
+    <div class="dropdown_wrapper" id="stock_universe_dropdown_v1">
+
+        <a href="#"
+           id="open_stock_universe_btn_v1"
+           class="dropdown_trigger">
+
+            <div class="app_icon" style="background-color:#e1dbcb;">
+                <i class="fa-solid fa-globe"></i>
+            </div>
+
+            <div class="app_label">
+                Stock Universe ▾
+            </div>
+
+        </a>
+
+        <div class="dropdown_menu" id="stock_universe_menu_v1">
+
+            <a href="#" data-range="1d">
+                <i class="fa-solid fa-calendar-day"></i>
+                1 Day
+            </a>
+
+            <a href="#" data-range="1w">
+                <i class="fa-solid fa-calendar-week"></i>
+                1 Week
+            </a>
+
+            <a href="#" data-range="1m">
+                <i class="fa-solid fa-calendar"></i>
+                1 Month
+            </a>
+
+            <a href="#" data-range="1y">
+                <i class="fa-solid fa-calendar-alt"></i>
+                1 Year
+            </a>
+
+            <a href="#" data-range="all">
+                <i class="fa-solid fa-database"></i>
+                All
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const trigger   = document.getElementById("open_stock_universe_btn_v1");
+            const menu      = document.getElementById("stock_universe_menu_v1");
+
+            const overlay   = document.getElementById("stock_universe_overlay_v1");
+            const container = document.getElementById("stock_universe_content_v1");
+            const titleEl   = document.getElementById("stock_universe_title_v1");
+
+            ////////////////////////////////////////////////////////////
+            // Toggle dropdown
+            ////////////////////////////////////////////////////////////
+
+            trigger.addEventListener("click", function (e) {
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                menu.classList.toggle("show");
+
+            });
+
+            ////////////////////////////////////////////////////////////
+            // Close dropdown outside click
+            ////////////////////////////////////////////////////////////
+
+            document.addEventListener("click", function (e) {
+
+                if (!menu.contains(e.target) && !trigger.contains(e.target)) {
+
+                    closeDropdown();
+
+                }
+
+            });
+
+            ////////////////////////////////////////////////////////////
+            // FORCE CLOSE FUNCTION
+            ////////////////////////////////////////////////////////////
+
+            function closeDropdown() {
+
+                menu.classList.remove("show");
+                menu.style.display = "none";
+
+                void menu.offsetHeight;
+
+            }
+
+            ////////////////////////////////////////////////////////////
+            // Handle range selection
+            ////////////////////////////////////////////////////////////
+
+            const items = menu.querySelectorAll("a");
+
+            let Y = 0;
+
+            while (Y < items.length) {
+
+                const item = items[Y];
+
+                item.addEventListener("click", function (e) {
+
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    ////////////////////////////////////////////////////////////
+                    // HARD CLOSE DROPDOWN
+                    ////////////////////////////////////////////////////////////
+
+                    closeDropdown();
+
+                    const range = item.dataset.range;
+
+                    overlay.style.display = "flex";
+                    document.body.style.overflow = "hidden";
+
+                    titleEl.innerText = "Stock Universe — " + range.toUpperCase();
+                    container.innerHTML = "Loading...";
+
+                    fetch("/api/stock_universe?range=" + range)
+                        .then(res => res.json())
+                        .then(data => {
+
+                            if (!data.success) {
+                                container.innerHTML = "Error loading universe.";
+                                return;
+                            }
+
+                            let html = "<table style='width:100%; border-collapse:collapse;'>";
+
+                            html += "<tr><th>Ticker</th><th>Company</th></tr>";
+
+                            let Z = 0;
+
+                            while (Z < data.rows.length) {
+
+                                html += "<tr>";
+                                html += "<td>" + data.rows[Z].ticker + "</td>";
+                                html += "<td>" + data.rows[Z].co_name + "</td>";
+                                html += "</tr>";
+
+                                Z += 1;
+                            }
+
+                            html += "</table>";
+
+                            container.innerHTML = html;
+
+                        })
+                        .catch(function () {
+
+                            container.innerHTML = "Server error.";
+
+                        });
+
+                });
+
+                Y += 1;
+            }
+
+        });
+    </script>
+<!-- stock_universe_dropdown_v3-->
+
+
+
+
+
+
+<!--Mobile Page 1 End Dont Touch this-->
+    <script>
+        if (window.innerWidth <= 768) {
+            document.write(`
+                </div> <!-- ✅ PAGE 1 ends div -->
+                <div class="tiles_page">
+            `);
+        }
+    </script>
+<!--Mobile Page 1 End Dont Touch this-->
+
+
+
+
+
+
+
+
+<!--block trade_restrictions_button_v5-->
+    <div class="dropdown_wrapper" id="trade_restrictions_button_v5">
+
+        <a id="open_trade_restrictions_btn_v5"
+           class="dropdown_trigger"
+           role="button"
+           style="cursor:pointer;">
+
+            <div class="app_icon" style="background-color:#e4c0cc;">
+                <i class="fa-solid fa-ban"></i>
+            </div>
+
+            <div class="app_label">
+                Restricted
+            </div>
+
+        </a>
+
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const trigger   = document.getElementById("open_trade_restrictions_btn_v5");
+            const overlay   = document.getElementById("trade_restrictions_overlay_v2");
+            const bodyEl    = document.getElementById("trade_restrictions_body_v2");
+
+            if (!trigger || !overlay || !bodyEl) return;
+
+            trigger.addEventListener("click", function () {
+
+                overlay.style.display = "flex";
+                document.body.style.overflow = "hidden";
+
+                bodyEl.innerHTML = "Loading restrictions...";
+
+                fetch("/api/trade_restrictions")
+                    .then(res => res.json())
+                    .then(data => {
+
+                        if (!data.success || !data.rows.length) {
+
+                            bodyEl.innerHTML = `
+                                <div style="padding:10px 0;">
+                                    No active restrictions.
+                                </div>
+                            `;
+                            return;
+                        }
+
+                        let html = "";
+
+                        let Y = 0;
+
+                        while (Y < data.rows.length) {
+
+                            html += `
+                                <div class="restriction_row">
+                                    ${data.rows[Y].ticker}
+                                    — Restricted Until: ${data.rows[Y].restricted_until}
+                                </div>
+                            `;
+
+                            Y += 1;
+                        }
+
+                        bodyEl.innerHTML = html;
+
+                    })
+                    .catch(function () {
+
+                        bodyEl.innerHTML = "Server error loading restrictions.";
+
+                    });
+
+            });
+
+        });
+    </script>
+<!--block trade_restrictions_button_v5-->
+
+
+
+
+
+
+
+
+<!-- all_data_dropdown_v1-->
+    <div class="dropdown_wrapper" id="all_data_dropdown_v1">
+        <a class="dropdown_trigger">
+            <div class="app_icon" style="background-color:#e0e7ff;">
+                <i class="fa-solid fa-database"></i>
+            </div>
+            <div class="app_label">All Data ▾</div>
+        </a>
+
+        <div class="dropdown_menu" id="all_data_menu_v1">
+
+            <a href="#" id="news_data_btn_v1">
+                <i class="fa-solid fa-newspaper"></i>
+                News Data
+            </a>
+
+            <a href="#" id="fundamental_data_btn_v1">
+                <i class="fa-solid fa-chart-column"></i>
+                Fundamental Data
+            </a>
+
+            <a href="#" id="historical_data_btn_v1">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                Historical Data
+            </a>
+
+            <a href="#" id="price_volume_data_btn_v1">
+                <i class="fa-solid fa-chart-line"></i>
+                Price & Volume
+            </a>
+
+            <a href="#" id="sentiment_data_btn_v1">
+                <i class="fa-solid fa-comment-dots"></i>
+                Sentiment Feed
+            </a>
+
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+        document.getElementById("news_data_btn_v1").addEventListener("click", e => {
+            e.preventDefault();
+            if (typeof closeAllDropdowns === "function") closeAllDropdowns();
+            window.location.href = "/data/news";
+        });
+
+        document.getElementById("fundamental_data_btn_v1").addEventListener("click", e => {
+            e.preventDefault();
+            if (typeof closeAllDropdowns === "function") closeAllDropdowns();
+            window.location.href = "/data/fundamentals";
+        });
+
+        document.getElementById("historical_data_btn_v1").addEventListener("click", e => {
+            e.preventDefault();
+            if (typeof closeAllDropdowns === "function") closeAllDropdowns();
+            window.location.href = "/data/historical";
+        });
+
+        document.getElementById("price_volume_data_btn_v1").addEventListener("click", e => {
+            e.preventDefault();
+            if (typeof closeAllDropdowns === "function") closeAllDropdowns();
+            window.location.href = "/data/price_volume";
+        });
+
+        document.getElementById("sentiment_data_btn_v1").addEventListener("click", e => {
+            e.preventDefault();
+            if (typeof closeAllDropdowns === "function") closeAllDropdowns();
+            window.location.href = "/data/sentiment";
+        });
+
+    });
+    </script>
+<!-- all_data_dropdown_v1-->
+
+
+
+
+
+
+
+
+
+<!-- sentiment_training_button_v1-->
+    <div class="dropdown_wrapper" id="sentiment_training_button_v1">
+
+        <a href="#"
+           id="open_sentiment_training_btn_v1"
+           class="dropdown_trigger">
+
+            <div class="app_icon" style="background-color:#c4b5fd;">
+                <i class="fa-solid fa-brain"></i>
+            </div>
+
+            <div class="app_label">
+                Sentiment Lab ▾
+            </div>
+
+        </a>
+
+    </div>
+<!-- sentiment_training_button_v1-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- backtesting_dropdown_v1-->
+    <div class="dropdown_wrapper" id="backtesting_dropdown_v1">
+        <a class="dropdown_trigger">
+            <div class="app_icon" style="background-color:#e5e7eb;">
+                <i class="fa-solid fa-flask"></i>
+            </div>
+            <div class="app_label">Backtesting ▾</div>
+        </a>
+
+        <div class="dropdown_menu" id="backtesting_menu_v1">
+
+            <a href="#" id="run_backtest_btn_v1">
+                <i class="fa-solid fa-play"></i>
+                Run Backtest
+            </a>
+
+            <a href="#" id="backtest_history_btn_v1">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                Backtest History
+            </a>
+
+            <a href="#" id="strategy_comparison_btn_v1">
+                <i class="fa-solid fa-scale-balanced"></i>
+                Strategy Comparison
+            </a>
+
+            <a href="#" id="parameter_optimization_btn_v1">
+                <i class="fa-solid fa-sliders"></i>
+                Parameter Optimization
+            </a>
+
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+        document.getElementById("run_backtest_btn_v1").addEventListener("click", e => {
+            e.preventDefault();
+            if (typeof closeAllDropdowns === "function") closeAllDropdowns();
+            window.location.href = "/backtesting/run";
+        });
+
+        document.getElementById("backtest_history_btn_v1").addEventListener("click", e => {
+            e.preventDefault();
+            if (typeof closeAllDropdowns === "function") closeAllDropdowns();
+            window.location.href = "/backtesting/history";
+        });
+
+        document.getElementById("strategy_comparison_btn_v1").addEventListener("click", e => {
+            e.preventDefault();
+            if (typeof closeAllDropdowns === "function") closeAllDropdowns();
+            window.location.href = "/backtesting/compare";
+        });
+
+        document.getElementById("parameter_optimization_btn_v1").addEventListener("click", e => {
+            e.preventDefault();
+            if (typeof closeAllDropdowns === "function") closeAllDropdowns();
+            window.location.href = "/backtesting/optimize";
+        });
+
+    });
+    </script>
+<!-- backtesting_dropdown_v1-->
+
+
+
+
+
+
+
+
+
+<!--block profile_button_v2-->
+
+    <div id="profile_wrapper_v2">
+
+        <div class="dropdown_wrapper">
+
+            <a id="open_profile_modal_v2"
+               class="dropdown_trigger"
+               role="button"
+               style="cursor:pointer;">
+
+                <div class="app_icon profile_icon_big">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+
+                <div class="app_label">
+                    Profile ▾
+                </div>
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <style>
+    .profile_icon_big {
+        background:#e2e8f0;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+    }
+
+    .profile_icon_big i {
+        font-size:65px;
+        color:#334155;
+    }
+    </style>
+
+<!--block profile_button_v2-->
+
+
+
+
+
+
+<!-- logout_button_v2-->
+    <div class="dropdown_wrapper" id="logout_button_v2">
+
+        <a href="/logout" id="logout_btn_v2" class="dropdown_trigger">
+            <div class="app_icon" style="background-color:#fee2e2;">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </div>
+            <div class="app_label">Logout</div>
+        </a>
+
+    </div>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const btn = document.getElementById("logout_btn_v2");
+
+        btn.addEventListener("click", function () {
+            // clean redirect to logout
+            window.location.href = "/logout";
+        });
+
+    });
+    </script>
+<!-- logout_button_v2-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--Desktop Page 1 End Dont Touch this-->
+    <script>
+        if (window.innerWidth > 768) {
+            document.write(`
+                </div> <!-- ✅ PAGE 1 ends div -->
+                <div class="tiles_page">
+            `);
+        }
+    </script>
+<!--Desktop Page 1 End Dont Touch this-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+</div>
+<div class="pagination_dots" id="pagination_dots"></div>
+
+
+
+
+
+
+
+
+<!--block pagination_dots_v5-->
+    <div id="pagination_dots" style="display:flex;justify-content:center;margin-top:40px;gap:10px;"></div>
+
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const wrapper = document.getElementById('tiles_wrapper');
+            const pages = wrapper ? wrapper.querySelectorAll('.tiles_page') : [];
+            const dots_container = document.getElementById('pagination_dots');
+            const total_pages = pages.length;
+            let current_page = 1;
+
+            // ✅ Create dots dynamically
+            for (let i = 1; i <= total_pages; i++) {
+                const dot = document.createElement('div');
+                dot.classList.add('dot');
+                if (i === 1) dot.classList.add('active');
+                dot.dataset.page = i;
+                dots_container.appendChild(dot);
+            }
+
+            // ✅ Page navigation logic
+            function goToPage(page) {
+                if (!wrapper) return;
+                if (page < 1 || page > total_pages) return;
+                current_page = page;
+                const offset = -(page - 1) * 100;
+                wrapper.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1)';
+                wrapper.style.transform = `translateX(${offset}%)`;
+
+                dots_container.querySelectorAll('.dot').forEach((d, i) =>
+                    d.classList.toggle('active', i + 1 === page)
+                );
+            }
+
+            // ✅ Dot click navigation
+            dots_container.addEventListener('click', e => {
+                if (e.target.classList.contains('dot')) {
+                    const page = parseInt(e.target.dataset.page);
+                    goToPage(page);
+                }
+            });
+
+            // ✅ Mobile swipe navigation
+            let startX = 0;
+            window.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+            window.addEventListener('touchend', e => {
+                const endX = e.changedTouches[0].clientX;
+                const diff = endX - startX;
+                if (Math.abs(diff) > 50) {
+                    if (diff < 0) goToPage(current_page + 1);
+                    else goToPage(current_page - 1);
+                }
+            });
+
+            // ✅ Desktop drag navigation
+            let isDragging = false;
+            let dragStartX = 0;
+            let dragDiff = 0;
+
+            wrapper.addEventListener('mousedown', e => {
+                isDragging = true;
+                dragStartX = e.clientX;
+                wrapper.style.transition = 'none'; // disable transition while dragging
+            });
+
+            window.addEventListener('mousemove', e => {
+                if (!isDragging) return;
+                dragDiff = e.clientX - dragStartX;
+                const dragPercent = dragDiff / window.innerWidth * 100;
+                const offset = -(current_page - 1) * 100 + dragPercent;
+                wrapper.style.transform = `translateX(${offset}%)`;
+            });
+
+            window.addEventListener('mouseup', e => {
+                if (!isDragging) return;
+                isDragging = false;
+                wrapper.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1)';
+
+                if (Math.abs(dragDiff) > 80) {
+                    if (dragDiff < 0) goToPage(current_page + 1); // drag left → next
+                    else goToPage(current_page - 1);              // drag right → previous
+                } else {
+                    // snap back
+                    goToPage(current_page);
+                }
+                dragDiff = 0;
+            });
+
+            // prevent accidental text selection while dragging
+            window.addEventListener('dragstart', e => e.preventDefault());
+        });
+    </script>
+<!--block pagination_dots_v5-->
+
+
+
+
+
+
+
+
+
+
+
+
+<!--block freeze_viewport_v3-->
+    <style>
+        /* ================================================
+           PAGE FREEZE (iPhone-Safe)
+           ================================================ */
+
+        html, body {
+            height: 100%;
+            overflow: hidden !important; /* freeze the page */
+            overscroll-behavior: none;
+            background: #fff;
+        }
+
+        /* Prevent accidental text select */
+        * {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* -----------------------------------------------
+           ALLOW SCROLL ***ONLY IN MODAL SCROLL AREA***
+           ----------------------------------------------- */
+        .demo-modal-scroll {
+            overflow-y: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            touch-action: pan-y !important; /* ALLOWS iPhone scrolling */
+            max-height: calc(80vh - 70px);
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            /* DO NOT FREEZE USING JS.
+               iPhone Safari breaks if JS freezes scroll.
+               CSS handles everything safely. */
+        });
+    </script>
+<!--block freeze_viewport_v3-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% include 'blocks/modals.html' %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+

@@ -1,0 +1,247 @@
+
+
+
+
+
+
+
+
+<!-- demo_user welcome sweet alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+            const demoUser = {{ demo_user|tojson }};
+
+            if (demoUser === true) {
+
+                Swal.fire({
+                    background: '#0f172a',
+                    color: '#e5e7eb',
+                    showConfirmButton: true,
+                    confirmButtonText: 'Enter Demo',
+                    confirmButtonColor: '#3c92f2',
+                    width: 520,
+                    html: `
+                        <div style="text-align:center; padding:10px 5px 0 5px;">
+
+                            <img src="/static/system/fav.png"
+                                 style="width:64px; margin-bottom:18px;">
+
+                            <div style="
+                                font-size:22px;
+                                font-weight:600;
+                                margin-bottom:14px;
+                                letter-spacing:.5px;
+                            ">
+                                Demo Environment
+                            </div>
+
+                            <div style="
+                                font-size:14px;
+                                line-height:1.6;
+                                color:#94a3b8;
+                                max-width:400px;
+                                margin:0 auto;
+                            ">
+                                This is a simulated preview of the trading system.
+                                <br><br>
+                                No live brokerage accounts are connected.
+                                No capital is deployed.
+                                <br><br>
+                                Explore the controls, model logic,
+                                scheduling, and execution flow.
+                            </div>
+
+                        </div>
+                    `
+                });
+
+            }
+
+        });
+    </script>
+<!-- demo_user welcome sweet alert -->
+
+
+
+
+
+
+
+
+
+<!-- trade_window_updated sweet alert -->
+    <!-- SweetAlert2 CDN (only include once per page if already loaded remove this line) -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+            const tradeWindowUpdated = {{ trade_window_updated|tojson }};
+            const activeAlgo = "{{ session_data.algo_name }}";
+
+            if (tradeWindowUpdated === true) {
+
+                Swal.fire({
+                    icon: 'success',
+                    title: `${activeAlgo} Trade Window Updated`,
+                    html: `
+                        <div style="font-size:14px; margin-top:6px;">
+                            Trading hours have been saved successfully.
+                        </div>
+                    `,
+                    confirmButtonColor: '#475569',
+                    confirmButtonText: 'Perfect',
+                    backdrop: `
+                        rgba(15,23,42,0.45)
+                    `,
+                    showClass: {
+                        popup: 'animate__animated animate__fadeInDown animate__faster'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__fadeOutUp animate__faster'
+                    }
+                });
+
+            }
+
+        });
+    </script>
+<!-- trade_window_updated sweet alert -->
+
+
+
+
+
+
+
+
+<!-- Algo On off Status Change -->
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+
+        const algoUpdated = {{ algo_updated|tojson }};
+        const activeAlgo  = "{{ session_data.algo_name }}";
+
+        if (algoUpdated === true) {
+
+            const isOff = activeAlgo.toLowerCase() === "off";
+
+            const titleText = isOff
+                ? "Alpha Algo Off"
+                : activeAlgo + " Selected";
+
+            const subText = isOff
+                ? "Trading engine has been stopped."
+                : "Control Grid settings only affect <strong>" + activeAlgo + "</strong> algo";
+
+            Swal.fire({
+                icon: null,
+                showConfirmButton: true,
+                confirmButtonText: "Continue",
+                confirmButtonColor: "#475569",
+                background: "#ffffff",
+                padding: "2.5em",
+                html: `
+                    <div style="text-align:center;">
+
+                        <div style="
+                            width:72px;
+                            height:72px;
+                            margin:0 auto 20px auto;
+                            border-radius:18px;
+                            background:#e2e8f0;
+                            display:flex;
+                            align-items:center;
+                            justify-content:center;
+                        ">
+                            <i class="fa-solid fa-diagram-project"
+                               style="font-size:28px; color:#334155;"></i>
+                        </div>
+
+                        <h2 style="
+                            font-size:28px;
+                            font-weight:700;
+                            margin-bottom:12px;
+                            color:#1e293b;
+                        ">
+                            ${titleText}
+                        </h2>
+
+                        <div style="
+                            font-size:16px;
+                            line-height:1.6;
+                            color:#475569;
+                        ">
+                            ${subText}
+                        </div>
+
+                    </div>
+                `
+            });
+
+        }
+
+    });
+    </script>
+<!-- Algo On off Status Change -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--run schedule-->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+            {% if schedule_updated %}
+
+                Swal.fire({
+                    icon: 'success',
+                    title: '{{ session_data.algo_name }} Run Schedule Updated',
+                    text: 'Schedule settings have been saved.',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#475569',
+                    background: '#ffffff',
+                    backdrop: 'rgba(0,0,0,0.4)'
+                });
+
+            {% endif %}
+
+        });
+    </script>
+<!--run schedule-->
+
+
+
+
+
+<!-- scraper_inputs_updated_alert_v1-->
+		<script>
+
+		document.addEventListener("DOMContentLoaded", function () {
+
+		    {% if scraper_inputs_updated %}
+
+		    Swal.fire({
+		        icon: "success",
+		        title: "Scraper Inputs Updated",
+		        text: "Scraper configuration saved successfully.",
+		        confirmButtonColor: "#111827"
+		    });
+
+		    {% endif %}
+
+		});
+		</script>
+<!-- scraper_inputs_updated_alert_v1-->

@@ -1,0 +1,42 @@
+<!-- algo_status (running or not) sweet alert-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+            const runStatusUpdated = {{ run_status_updated|tojson }};
+            const activeAlgo = "{{ session_data.algo_name }}";
+
+            if (runStatusUpdated === "on") {
+                Swal.fire({
+                    icon: 'success',
+                    title: `${activeAlgo} Algo Started`,
+                    html: `
+                        <div style="font-size:15px;">
+                            <i class="fa-solid fa-diagram-project" 
+                               style="margin-right:6px;"></i>
+                            ${activeAlgo} is now running.
+                        </div>
+                    `,
+                    confirmButtonColor: '#16a34a'
+                });
+            }
+
+            if (runStatusUpdated === "off") {
+                Swal.fire({
+                    icon: 'warning',
+                    title: `${activeAlgo} Algo Stopped`,
+                    html: `
+                        <div style="font-size:15px;">
+                            <i class="fa-solid fa-diagram-project" 
+                               style="margin-right:6px;"></i>
+                            ${activeAlgo} has been halted.
+                        </div>
+                    `,
+                    confirmButtonColor: '#dc2626'
+                });
+            }
+
+        });
+    </script>
+<!-- algo_status sweet alert-->

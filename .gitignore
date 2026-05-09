@@ -1,0 +1,25 @@
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Local secrets and keys
+.env
+.env.*
+*.pem
+robinhood_key
+robinhood_key.pub
+
+# Local database/log/runtime artifacts
+*.log
+*.sqlite
+*.sqlite3

@@ -1,0 +1,2986 @@
+{% include 'blocks/page_setup.html' %}
+
+
+{% include '/deane_style_sheet.html' %}
+
+
+
+
+
+<style>
+    
+
+
+
+    html, body {
+    margin: 0;
+    padding: 0;
+    background: radial-gradient(circle at center, #0b0f14 0%, #05070a 70%);
+    color: #ffffff;
+}
+</style>
+
+
+
+
+
+<!--block animation-container-->
+
+        <style>
+            .animation {
+                opacity: 0;
+                transform: translateY(200px); /* Start far below */
+                transition: opacity 1.8s ease, transform 1.8s ease-out;
+                visibility: hidden; /* Ensure no flash at the beginning */
+            }
+
+            .animation.visible {
+                opacity: 1;
+                transform: translateY(0);
+                animation: bounceIn 0.6s ease-out 1;
+                visibility: visible; /* Make visible when animation starts */
+            }
+
+            @keyframes bounceIn {
+                0% {
+                    transform: translateY(200px); /* Start far below */
+                }
+                60% {
+                    transform: translateY(-30px); /* Bounce up */
+                }
+                80% {
+                    transform: translateY(10px); /* Slight overshoot */
+                }
+                100% {
+                    transform: translateY(0); /* Settle in place */
+                }
+            }
+        </style>
+
+        <div class="animation" id="animation-container">
+
+        <script>
+            window.addEventListener('load', function() {
+                const animationElement = document.getElementById('animation-container');
+                setTimeout(() => {
+                    animationElement.classList.add('visible');
+                }, 100);
+            });
+        </script>
+<!--block animation-container-->
+
+
+
+
+
+
+
+
+
+<!--Account Created popup-->
+
+
+    {% if account_created %}
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        Swal.fire({
+            icon: "success",
+            title: "Account Successfully Created",
+            html: `
+                <p style="margin-bottom:12px;">
+                    Your account has been successfully created.
+                </p>
+
+                <p style="margin-bottom:12px;">
+                    <strong>Login Credentials</strong><br>
+                    Username: <strong>{{ email }}</strong><br>
+                    Password: <strong>{{ password }}</strong>
+                </p>
+
+                <p style="margin-bottom:12px;">
+                    A confirmation email has been sent containing your proof of purchase,
+                    terms of service, and subscription details for your records.
+                </p>
+
+                <p style="font-size:14px; color:#6b7280;">
+                    Per your agreement, billing will occur monthly. You may cancel your
+                    subscription at any time after the initial three-month minimum term,
+                    beginning on <strong>{{ cancel_after_str }}</strong>.
+                </p>
+            `,
+            confirmButtonText: "Continue",
+            confirmButtonColor: "#3c92f2"
+        });
+
+    });
+    </script>
+    {% endif %}
+<!--Account Created popup-->
+
+
+
+
+
+
+
+
+
+
+
+<!--block account_deleted_popup_v1-->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+
+            {% if account_deleted %}
+
+            Swal.fire({
+                icon: "success",
+                title: "Account Deleted",
+                text: "Your account has been permanently deleted.",
+                confirmButtonColor: "#3c92f2",
+                timer: 2000,
+                showConfirmButton: false
+            });
+
+            {% endif %}
+
+        });
+    </script>
+<!--block account_deleted_popup_v1-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--landing block -->
+
+        <style>
+            .main-hero {
+                position: relative;
+                text-align: center;
+                padding: 0; /* Remove padding */
+                margin: 0; /* Remove margin */
+                padding-left: 20px;
+                padding-right: 20px;
+                font-family: 'Oswald', sans-serif;
+                overflow: hidden;
+                background-color: white;
+                z-index: 1; /* Ensure it's above the background elements */
+                min-height: 100vh;
+                width: 100vw; /* Ensure full viewport width */
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+            }
+        </style>
+
+        <div class="main-hero">  <!--Hero Starts... Don't touch this -->
+
+
+
+
+
+
+
+<!-- gear logo -->
+
+    <style>
+
+        /* ============================= */
+        /* BASE                          */
+        /* ============================= */
+
+        body {
+            margin: 0;
+            background: radial-gradient(circle at center, #05070a 0%, #000000 100%);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            background: black;
+        }
+
+        /* ============================= */
+        /* CORE WRAPPER                  */
+        /* ============================= */
+
+        #core_wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -55%);
+            text-align: center;
+        }
+
+        /* ============================= */
+        /* LOGO                          */
+        /* ============================= */
+
+        #logo_block {
+            font-size: 185px;
+            font-weight: 1000;
+            letter-spacing: -3px;
+            margin-top: -50px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #hood_text {
+            color: #4ade80;
+
+
+        }
+
+        #algo_block {
+            display: flex;
+            align-items: center;
+            color: #e5e7eb;
+
+        }
+
+        /* ============================= */
+        /* GEAR (EMOJI CLEAN SPIN)       */
+        /* ============================= */
+
+        #gear_icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 0.85em;
+
+            margin-left: -2px;
+            margin-right: -4px;
+            margin-top: 30px;
+
+            transform-origin: 50% 50%;
+
+            animation: gear_spin 6s linear infinite;
+        }
+
+        @keyframes gear_spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ============================= */
+        /* DOT COM                       */
+        /* ============================= */
+
+        #dotcom_text {
+            font-size: 12px;
+
+            margin-left: 6px;
+
+            color: #e5e7eb;
+            opacity: 0.7;
+
+            letter-spacing: 1px;
+
+            align-self: flex-end;
+            transform: translateY(8px); /* 🔥 visual drop WITHOUT breaking spin */
+        }
+
+        /* ============================= */
+        /* STATUS                        */
+        /* ============================= */
+
+        #status_container {
+            margin-top: 20px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            gap: 14px;
+
+            animation: system_pulse 1.8s ease-in-out infinite;
+        }
+
+        #status_dot {
+            width: 17px;
+            height: 17px;
+
+            background: #4ade80;
+            border-radius: 50%;
+        }
+
+        #status_text {
+            font-size: 30px;
+            font-weight: 600;
+            color: black;
+        }
+
+        @keyframes system_pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.75;
+            }
+            50% {
+                transform: scale(1.12);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 0.75;
+            }
+        }
+
+        /* ============================= */
+        /* FOOTER                        */
+        /* ============================= */
+
+        #footer_text {
+            position: fixed;
+            bottom: 22px;
+            left: 50%;
+            transform: translateX(-50%);
+
+            font-size: 16px;
+            letter-spacing: 1px;
+
+            display: flex;
+            align-items: center;
+            gap: 0px;
+        }
+
+        #footer_robinhood {
+            color: rgba(74, 222, 128, 0.65);
+        }
+
+        #footer_algo {
+            color: rgba(255,255,255,0.7);
+        }
+
+        #footer_copy {
+            font-size: 12px;
+            color: rgba(255,255,255,0.45);
+        }
+
+        #footer_status_extra {
+            margin-left: 10px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.35);
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- CORE -->
+    <div id="core_wrapper">
+
+        <!-- LOGO -->
+        <div id="logo_block">
+
+            <span id="hood_text">Hood</span>
+
+            <span id="algo_block">
+                Alg
+                <span id="gear_icon">⚙️</span>
+            </span>
+
+
+        </div>
+
+        <!-- STATUS -->
+        <div id="status_container">
+            <div id="status_dot"></div>
+            <div id="status_text">Robinhood Algorithmic - V1</div>
+        </div>
+
+    </div>
+
+
+<!-- gear logo -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!--Logo / Image -->
+        <style>
+            img.responsive-image {
+                position: relative; /* Ensure top positioning works */
+                top: -2vw; /* Position the image 30% of the viewport width from the top */
+                width: 100%; /* Ensure the image is always full-width */
+                height: auto; /* Maintain aspect ratio */
+                object-fit: cover; /* Cover the area without stretching */
+
+            }
+
+
+                    @media (max-width: 767px) {
+                        img.responsive-image {
+                            width: 240%; /* Enlarge image to effectively 'crop' it */
+                            height: auto; /* Maintain aspect ratio */
+                            object-position: center; /* Center the focus of the image */
+                            margin-left: -95%; /* Offset the enlargement to maintain centering */
+                            margin-right: -95%; /* Offset the enlargement to maintain centering */
+                            margin-top: -80px ;
+                            margin-bottom: 30px;
+                        }
+                    }
+        </style>
+
+        <picture>
+            <img src="static/front_end/landing_logo.png" alt="System Image" class="responsive-image">
+        </picture>
+
+
+
+            <!-- Code Generated Logo img (in progress) -->
+                <!--style-
+                    <style>
+
+                        .main-hero h1 {
+                            margin: 0;
+                            font-size: 5em; /* Default font size */
+                            font-weight: 800;
+                            color: black;
+                            font-family: 'Poppins', sans-serif;
+                            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Default shadow */
+                            -webkit-text-stroke: 3px white; /* Default stroke */
+                            text-align: center;
+                        }
+
+                        .main-hero h1 .com {
+                            font-size: 0.25em; /* 25% of the size */
+                            -webkit-text-stroke: 1px white; /* Default stroke */
+                            text-shadow: 0.3px 0.3px 0.8px rgba(0, 0, 0, 0.1); /* Default shadow */
+                            vertical-align: baseline;
+                            position: relative;
+                            top: -10%; /* Shift up */
+                            left: -1%; /* Shift left */
+                        }
+
+                        .main-hero p {
+                            font-size: 1.2em;
+                            margin: 0px auto;
+                            max-width: 800px;
+                            color: black;
+                            font-family: 'Poppins', sans-serif;
+                            font-weight: 800;
+                            margin-bottom: 30px;
+                            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Default shadow */
+                        }
+
+                        /* Responsive adjustments for smaller screens */
+                        @media (max-width: 1024px) {
+                            .main-hero h1 {
+                                font-size: 4em; /* Slightly smaller font */
+                                text-shadow: 1.5px 1.5px 3px rgba(0, 0, 0, 0.6); /* Reduce shadow */
+                                -webkit-text-stroke: 2.5px white; /* Reduce stroke */
+                            }
+
+                            .main-hero h1 .com {
+                                font-size: 0.23em; /* Adjust .com font size */
+                                -webkit-text-stroke: 0.8px white; /* Smaller stroke */
+                                text-shadow: 0.25px 0.25px 0.7px rgba(0, 0, 0, 0.1); /* Smaller shadow */
+                            }
+
+                            .main-hero p {
+                                font-size: 1.1em;
+                                text-shadow: 1.5px 1.5px 3px rgba(0, 0, 0, 0.4); /* Reduce shadow */
+                            }
+                        }
+
+                        @media (max-width: 768px) {
+                            .main-hero h1 {
+                                font-size: 2.3em; /* Smaller font for smaller screens */
+                                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Reduce shadow */
+                                -webkit-text-stroke: 2px white; /* Smaller stroke */
+                            }
+
+                            .main-hero h1 .com {
+                                font-size: 0.2em; /* Adjust .com size */
+                                -webkit-text-stroke: 0.6px white; /* Smaller stroke */
+                                text-shadow: 0.2px 0.2px 0.6px rgba(0, 0, 0, 0.1); /* Smaller shadow */
+                            }
+
+                            .main-hero p {
+                                font-size: 1em;
+                                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Smaller shadow */
+                            }
+                        }
+
+                        @media (max-width: 480px) {
+                            .main-hero h1 {
+                                font-size: 1.8em; /* Even smaller for very small screens */
+                                text-shadow: 0.8px 0.8px 1.6px rgba(0, 0, 0, 0.5); /* Smaller shadow */
+                                -webkit-text-stroke: 1.5px white; /* Smaller stroke */
+                            }
+
+                            .main-hero h1 .com {
+                                font-size: 0.18em; /* Adjust .com size */
+                                -webkit-text-stroke: 0.5px white; /* Smaller stroke */
+                                text-shadow: 0.15px 0.15px 0.5px rgba(0, 0, 0, 0.1); /* Smaller shadow */
+                            }
+
+                            .main-hero p {
+                                font-size: 0.9em;
+                                text-shadow: 0.8px 0.8px 1.6px rgba(0, 0, 0, 0.3); /* Smaller shadow */
+                            }
+                        }
+
+                    </style>
+                <!--style-->
+
+                <!--HTML-
+                    <h1 style="color: #5194f0; font-family: 'Poppins', sans-serif; margin-top: -30px; text-align: center;">
+                        <span style="font-size: 150%;">M</span>y<span style="font-size: 150%;">S</span>torage<span style="font-size: 150%;">S</span>oftware
+                        <span class="com">.com</span>
+                    </h1>
+
+                    <p style="color: black; font-family: 'Poppins', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: -5px; text-align: center;">
+                        #1 rated technology platform for the self storage industry
+                    </p>
+                <!--HTML-->
+            <!-- Code Generated Logo img (in progress) -->
+    <!--Logo / Image -->
+
+
+
+    <!--Video Block-->
+
+        <style>
+            .main-hero video, .fallback-image {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                opacity: 0.20;
+                z-index: -1;
+                background-color: white;
+                pointer-events: none;
+                filter: drop-shadow(0px 10px 30px rgba(0, 0, 0, 0.5)) brightness(1.2);
+                transition: filter 1s ease;
+
+
+
+            }
+
+            /* Hide fallback image initially */
+            .fallback-image {
+                display: none;
+
+            }
+
+            @media (max-width: 768px) {
+                .main-hero video, .fallback-image {
+                    height: 100%;
+                }
+
+            }
+        </style>
+
+
+
+
+        <video autoplay muted playsinline loop id="backgroundVideo" poster="{{ url_for('static', filename='images/front_end/landing_poster.jpg') }}">
+            <source src="{{ url_for('static', filename='/front_end/landing.mp4') }}" type="video/mp4">
+        </video>
+
+
+
+
+        <img src="{{ url_for('static', filename='/front_end/fall_back_image.png') }}" alt="Fallback Image" class="fallback-image" id="fallbackImage">
+
+        <!--script-->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var video = document.getElementById('backgroundVideo');
+                var fallbackImage = document.getElementById('fallbackImage');
+                video.muted = true;
+
+                function tryPlayVideo() {
+                    if (window.innerWidth > 768) {
+                        // On desktop, attempt to play the video
+                        var playPromise = video.play();
+
+                        if (playPromise !== undefined) {
+                            playPromise
+                                .then(function() {
+                                    fallbackImage.style.display = 'none'; // Hide fallback if video plays
+                                })
+                                .catch(function() {
+                                    fallbackImage.style.display = 'none'; // Don't show fallback on desktop unless explicitly errored
+                                });
+                        } else {
+                            fallbackImage.style.display = 'none'; // Don't show fallback on desktop
+                        }
+                    } else {
+                        // On mobile, fallback image is always shown
+                        fallbackImage.style.display = 'block';
+                        video.style.display = 'none';
+                    }
+                }
+
+                function showFallback() {
+                    if (window.innerWidth <= 768) {
+                        // Only show fallback on mobile
+                        video.style.display = 'none';
+                        fallbackImage.style.display = 'block';
+                    }
+                }
+
+                function handleTabVisibility() {
+                    if (document.hidden) {
+                        // Pause video on tab switch
+                        video.pause();
+                    } else {
+                        // Try to play video again on tab return
+                        tryPlayVideo();
+                    }
+                }
+
+                // Try to play video immediately
+                tryPlayVideo();
+
+                // Event listeners for fallback if video errors or pauses
+                video.addEventListener('pause', showFallback);
+                video.addEventListener('error', showFallback);
+
+                // Listen for tab visibility changes
+                document.addEventListener('visibilitychange', handleTabVisibility);
+            });
+        </script>
+        <!--script-->
+    <!--Video Block-->
+
+
+
+
+    <!-- Big Buttons-->
+
+        <!--style-->
+            <style>
+                .unique_button_container {
+                    font-family: 'Poppins', sans-serif;
+                    width: 100vw;
+                    text-align: center;
+                    min-height: 10vh;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin-top: -20px;
+                    z-index: 2;
+                }
+
+                .unique_big_button {
+                    font-size: 2.5em;
+                    padding: 22px 33px;
+                    margin: 20px;
+                    border-radius: 50px;
+                    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+                    font-weight: 800;
+                    background-color: #262626;
+                    color: white;
+                    cursor: pointer;
+                    z-index: 2;
+                    transition: transform 0.3s ease, background-color 0.3s ease;
+                    border: none;
+                }
+
+                .unique_big_button:hover {
+                    transform: scale(1.175);
+                }
+
+                .unique_big_button:active {
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+                    transform: translateY(2px);
+                    background-color: #1e3e73;
+                }
+
+                @media (max-width: 767px) {
+                    .unique_button_container {
+                        margin-top: -20px;
+                        min-height: auto;
+
+                    }
+
+                    .unique_big_button {
+                        font-size: 1.75em;
+                        padding: 14px 22px;
+                        margin: 12px;
+
+                        margin-top: 30px ;
+                        /*border: solid 3px;
+                        border-radius: 28px;
+                    }
+                }
+            </style>
+        <!--style-->
+
+        <!--HTML-->
+            <div class="unique_button_container">
+
+
+
+                <button id="demo_now_secondary_button" class="unique_big_button">
+                    Demo
+                </button>
+
+
+
+
+                    <button id="operator_signin_button_secondary" class="unique_big_button" type="button">
+                        Log In
+                    </button>
+
+
+
+
+
+            </div>
+
+
+
+
+
+
+        <!--HTML-->
+    <!-- Big Buttons-->
+
+
+
+
+        </div> <!--hero div-->
+<!--landing block -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--block beta_notice_v3-->
+    <style>
+    /* Ribbon */
+    #beta-notice {
+        position: fixed;
+        top: 25px;
+        left: -260px;
+        width: 260px;
+        background-color: #262626;
+        color: #ffffff;
+        padding: 13px 17px;
+        border-radius: 10px;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 900;
+
+        font-size: 19px;
+        line-height: 1.6;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        z-index: 1200;
+        transition: left .5s ease-out, transform .3s ease-in-out;
+        cursor: pointer;
+    }
+    #beta-notice.show { left: 20px; }
+    #beta-notice:hover { transform: scale(1.04); }
+
+    /* Modal */
+    .beta_modal_overlay {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,.55);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 5000 !important;
+    }
+    .beta_modal_container {
+        background: #fff;
+        width: 90%;
+        max-width: 460px;
+        border-radius: 20px;
+        font-family: 'Poppins', sans-serif;
+        box-shadow: 0 8px 30px rgba(0,0,0,.25);
+        overflow: hidden;
+    }
+    .beta_modal_header {
+        background-color: #262626;
+        color: #fff;
+        font-weight: 800;
+        font-size: 20px;
+        text-align: center;
+        padding: 16px 20px;
+        position: relative;
+    }
+    .beta_modal_close {
+        position: absolute; top: 12px; right: 16px;
+        font-size: 20px; font-weight: bold; color: #fff; cursor: pointer;
+    }
+    .beta_modal_body { padding: 28px 30px; font-size: 15px; color: #333; text-align: center; }
+    .beta_modal_body p { margin-bottom: 20px; line-height: 1.6; }
+
+    .feature_announcement_line {
+        display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 18px;
+    }
+    .feature_announcement_icon { color: #3c92f7; font-size: 18px; }
+    .feature_announcement_notice_link { 
+        color: #3c92f7; 
+        font-weight: 600; 
+        font-size: 15px; 
+        text-decoration: underline; 
+        cursor: pointer; 
+    }
+
+    .swal2-container { z-index: 6000 !important; }
+
+    @media (max-width: 600px) {
+        .beta_modal_body { padding: 22px; font-size: 14px; }
+        .beta_modal_header { font-size: 14px; padding: 14px; }
+        .beta_modal_close { font-size: 18px; }
+
+        #beta-notice {
+            top: 15px;
+            max-width: 175px; padding: 10px 10px; border-radius: 7px;
+            font-size: 18px; line-height: 1.2;
+        }
+    }
+    </style>
+
+    <div id="beta-notice">
+        <div class="line">
+            <i class="fas fa-bolt"></i>
+                        <i class="fas fa-bolt"></i>
+
+            &nbsp;&nbsp;<strong> BETA Notice</strong>
+        </div>
+    </div>
+
+    <div id="beta_modal" class="beta_modal_overlay" onclick="close_beta_modal(event)">
+        <div class="beta_modal_container" onclick="event.stopPropagation()">
+            <div class="beta_modal_header">
+                BlackTieEvent.app — Beta Notice
+                <span class="beta_modal_close" onclick="close_beta_modal_manual()">×</span>
+            </div>
+            <div class="beta_modal_body">
+                <p><strong>BlackTieEvent</strong> is actively evolving — new features, analytics, and bidding tools are being added every week.</p>
+                <p>This is a <strong>public beta release</strong>, so some functions may be incomplete, in testing, or temporarily disabled.</p>
+                <p>Your feedback helps us refine the experience for bidders and admins alike.</p>
+                <p>Thanks for being an early user and helping shape the next version of BlackTieEvent.app!</p>
+                <div class="feature_announcement_line">
+                    <i class="fas fa-comment-dots feature_announcement_icon"></i>
+                    <a class="feature_announcement_notice_link" id="open_contact_from_beta">Send Feedback</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    window.addEventListener('DOMContentLoaded', function () {
+        const ribbon = document.getElementById('beta-notice');
+        setTimeout(() => ribbon && ribbon.classList.add('show'), 1250);
+
+        const modal = document.getElementById('beta_modal');
+        if (modal && modal.parentElement !== document.body) {
+            document.body.appendChild(modal);
+        }
+
+        // 🟦 Show Beta modal when ribbon clicked
+        ribbon && ribbon.addEventListener('click', function () {
+            modal.style.display = 'flex';
+            ribbon.style.display = 'none';
+        });
+
+        // 🟩 Open Contact popup from "Send Feedback"
+        const feedbackLink = document.getElementById('open_contact_from_beta');
+        if (feedbackLink) {
+            feedbackLink.addEventListener('click', function (e) {
+                e.preventDefault();
+                close_beta_modal_manual();     // close beta modal
+                setTimeout(() => {
+                    if (typeof open_deanes_contact_popup === 'function') {
+                        open_deanes_contact_popup(); // open contact popup
+                    } else {
+                        console.warn("open_deanes_contact_popup() not found");
+                    }
+                }, 250);
+            });
+        }
+    });
+
+    function close_beta_modal(event) {
+        if (event.target && event.target.id === 'beta_modal') {
+            event.currentTarget.style.display = 'none';
+            const ribbon = document.getElementById('beta-notice');
+            if (ribbon) ribbon.style.display = '';
+        }
+    }
+
+    function close_beta_modal_manual() {
+        const modal = document.getElementById('beta_modal');
+        if (modal) modal.style.display = 'none';
+        const ribbon = document.getElementById('beta-notice');
+        if (ribbon) ribbon.style.display = '';
+    }
+    </script>
+
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+<!--block beta_notice_v3-->
+
+
+
+
+
+
+
+
+
+
+
+{% include '/menu.html' %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--block about_sandbox_v8-->
+
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700;900&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* 🎯 Fully sandboxed - independent from page styles */
+        #about_sandbox_v8 {
+            all: revert-layer;
+            isolation: isolate;
+            position: relative;
+            z-index: 0;
+            --blue:#3c94f7;
+            --blue-dark:#226fcf;
+            --bg-light:#f8fafc;
+            --ink:#0f172a;
+            background:#ffffff;
+            color:var(--ink);
+            font-family:'Poppins',sans-serif;
+            scroll-behavior:smooth;
+        }
+
+        #about_sandbox_v8 * { box-sizing:border-box; font-family:inherit; }
+        #about_sandbox_v8 section { padding:80px 0; }
+        #about_sandbox_v8 h1,#about_sandbox_v8 h2,#about_sandbox_v8 h3 { font-family:'Oswald',sans-serif; margin:0; }
+        #about_sandbox_v8 p{ line-height:1.7; }
+        #about_sandbox_v8 .container{ width:min(1100px,90%); margin:0 auto; }
+
+        .fade-in{ opacity:0; transform:translateY(20px); transition:opacity .8s ease,transform .8s ease; }
+        .fade-in.show{ opacity:1; transform:translateY(0); }
+
+        /* === HERO === */
+        .hero{
+            background:linear-gradient(135deg,#3c94f7,#61a9ff);
+            color:#fff;text-align:center;padding:120px 20px 160px;
+            position:relative;overflow:hidden;
+        }
+        .hero h1{font-size:58px;font-weight:900;margin-bottom:10px;}
+        .hero p{font-size:20px;opacity:.9;margin-bottom:26px;}
+        .hero button{
+            background:#fff;color:#3c94f7;font-family:'Oswald';font-weight:900;
+            border:2px solid #3c94f7;border-radius:999px;padding:14px 36px;font-size:18px;
+            cursor:pointer;transition:all .25s ease;
+        }
+        .hero_bg_icon{
+            position:absolute;opacity:.07;width:220px;
+            animation:floatQR 12s ease-in-out infinite;
+        }
+        @keyframes floatQR{0%,100%{transform:translateY(0);}50%{transform:translateY(-25px);}}
+
+        /* === MISSION === */
+        .mission_section { background:#fff; }
+        .mission_content {
+            display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;
+        }
+        .mission_text h2{font-size:38px;color:var(--ink);margin-bottom:16px;}
+        .mission_text p{color:#334155;font-size:17px;}
+        .mission_image img{
+            width:100%;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,0.1);
+        }
+        @media(max-width:800px){.mission_content{grid-template-columns:1fr;}}
+
+        /* === HOW IT WORKS === */
+        .how_section{background:var(--bg-light);}
+        .how_title{text-align:center;margin-bottom:50px;}
+        .how_title h2{font-size:38px;}
+        .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;}
+        .step{
+            background:#fff;border-radius:18px;padding:30px;
+            box-shadow:0 8px 22px rgba(0,0,0,0.05);text-align:center;
+            transition:transform .25s ease,box-shadow .25s ease;
+        }
+        .step:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(0,0,0,0.1);}
+        .step img{width:70px;margin-bottom:14px;}
+        .step h3{font-size:22px;margin-bottom:8px;}
+        .step p{font-size:15px;color:#475569;}
+        @media(max-width:900px){.steps{grid-template-columns:1fr;}}
+
+        /* === VISION === */
+        .vision_section{
+            background:linear-gradient(135deg,#3c94f7,#2f7dd6);color:#fff;
+        }
+        .vision_content{
+            display:flex;flex-direction:column;align-items:center;text-align:center;
+            max-width:850px;margin:0 auto;
+        }
+        .vision_content h2{font-size:38px;margin-bottom:18px;}
+        .vision_content p{font-size:17px;opacity:.95;}
+
+        /* === BENEFITS === */
+        .benefits_section{background:#fff;}
+        .benefits_grid{display:grid;grid-template-columns:repeat(2,1fr);gap:40px;}
+        .benefit_box{
+            background:#f9fafb;border-radius:16px;padding:30px;
+            box-shadow:0 4px 12px rgba(0,0,0,.05);transition:all .25s ease;
+        }
+        .benefit_box:hover{transform:translateY(-3px);box-shadow:0 10px 20px rgba(0,0,0,.08);}
+        .benefit_box h3{font-size:22px;margin-bottom:8px;color:var(--blue);}
+        .benefit_box p{font-size:15px;color:#475569;}
+
+
+        @media(max-width:900px){.benefits_grid{grid-template-columns:1fr;}}
+
+        /* === TESTIMONIALS === */
+        .testimonials_section{background:var(--bg-light);}
+        .testimonials_grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+        .testimonial{
+            background:#fff;border-radius:18px;padding:30px;
+            box-shadow:0 4px 12px rgba(0,0,0,0.06);
+        }
+        .testimonial p{font-style:italic;color:#475569;}
+        .testimonial .author{margin-top:16px;font-weight:700;color:var(--blue);}
+        @media(max-width:900px){.testimonials_grid{grid-template-columns:1fr;}}
+
+        /* === CTA === */
+        .cta_section{
+            background:linear-gradient(135deg,#3c94f7,#61a9ff);
+            color:#fff;text-align:center;padding:100px 20px;
+        }
+        .cta_section h2{font-size:40px;margin-bottom:20px;}
+        .cta_section p{font-size:18px;margin-bottom:30px;opacity:.9;}
+        .cta_section a{
+            display:inline-block;background:#fff;color:#3c94f7;text-decoration:none;
+            font-family:'Oswald';font-weight:900;padding:14px 36px;border-radius:999px;
+            transition:all .25s ease;
+        }
+        .cta_section a:hover{background:#0f172a;color:#fff;}
+
+        /* === FOOTER === */
+        footer{background:#0f172a;color:#94a3b8;text-align:center;padding:50px 20px;}
+        footer a{color:#3c94f7;text-decoration:none;margin:0 10px;}
+        footer a:hover{text-decoration:underline;}
+        .footer_logo{font-family:'Oswald';font-weight:900;color:#fff;font-size:24px;margin-bottom:10px;}
+    </style>
+
+
+
+
+    <div id="about_sandbox_v8">
+<!--block about_sandbox_v8-->
+
+
+
+
+
+
+
+
+
+<!--MASTER block page_divider_black_v6-->
+
+    <style>
+        .page_divider_black {
+            position: relative;
+            width: 100%;
+            height: 36px;
+            overflow: hidden;
+
+            /* Base */
+            background: #000000;
+        }
+
+        /* ✨ moving light sweep */
+        .page_divider_black::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -60%;
+            width: 60%;
+            height: 100%;
+
+            background: linear-gradient(
+                120deg,
+                transparent,
+                rgba(255,255,255,0.10),
+                transparent
+            );
+
+            animation: divider_sweep 5s ease-in-out infinite;
+        }
+
+        /* 🔥 edge glow / depth */
+        .page_divider_black::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 2px;
+
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,255,255,0.25),
+                transparent
+            );
+        }
+
+        @keyframes divider_sweep {
+            0%   { left: -60%; }
+            50%  { left: 100%; }
+            100% { left: 100%; }
+        }
+
+        @media (max-width: 600px) {
+            .page_divider_black {
+                height: 32px;
+            }
+            .page_divider_black::before {
+                animation-duration: 7s;
+            }
+        }
+    </style>
+<!--MASTER block page_divider_black_v6-->
+
+
+
+
+<div class="page_divider_black"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--block about_section_v21-->
+
+    <style>
+        .about_section_wrapper {
+            background: #f4f4f4;
+            padding: 70px 20px 75px;
+            text-align: center;
+        }
+
+        .about_section_container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .about_section_title {
+            font-size: 72px;
+            font-weight: 800;
+            letter-spacing: 4px;
+            margin-bottom: 35px;
+            color: #0f172a;
+        }
+
+        .about_intro_text {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 19px;
+            line-height: 1.8;
+            max-width: 820px;
+            margin: 0 auto;
+            color: #2c2c2c;
+        }
+
+        /* === CLEAN INLINE CHIPS === */
+
+        .about_inline_chip {
+            display: inline-block;
+            padding: 3px 12px;
+            margin: 0 4px;
+            border-radius: 20px;
+            background: #e5e7eb;
+            color: #0f172a;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all .2s ease;
+        }
+
+        .about_inline_chip:hover {
+            background: #0f172a;
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        /* === REFINED BUTTON === */
+
+        .about_button_wrap {
+            margin-top: 50px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .about_get_app_button {
+            padding: 14px 38px;
+            border-radius: 60px;
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: .5px;
+            background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            transition: all .25s ease;
+            box-shadow: 0 10px 24px rgba(0,0,0,0.25);
+        }
+
+        .about_get_app_button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 32px rgba(0,0,0,0.35);
+        }
+
+        @media(max-width:900px){
+
+            .about_section_wrapper {
+                padding: 55px 20px 60px;
+            }
+
+            .about_section_title {
+                font-size: 44px;
+                margin-bottom: 25px;
+            }
+
+            .about_intro_text {
+                font-size: 16px;
+                width: 92%;
+            }
+
+            .about_get_app_button {
+                font-size: 18px;
+                padding: 12px 28px;
+            }
+        }
+
+    </style>
+
+    <div class="about_section_wrapper">
+        <div class="about_section_container">
+
+            <div class="about_section_title">
+                ABOUT:
+            </div>
+
+    <div class="about_intro_text">
+        <b>BlackTieEvent.app</b> is an 
+        <span class="about_inline_chip" onclick="open_about_event_popup()">Event Management</span>
+        and
+        <span class="about_inline_chip" onclick="open_about_fund_popup()">Fundraising</span> Platform
+        built to do two things: give you everything you need to plan and run your event, and everything you need to raise money on event night. From ticket sales, seating charts, and guest check-in to live auctions, raffles, sponsorships, and real-time donations, it connects every moving part of your event into one streamlined system. 
+
+        Instead of juggling spreadsheets, separate tools, and disconnected payment platforms, everything operates inside one simple dashboard designed for clarity, speed, and control. The result is a smoother guest experience, less stress for your team, and a structure intentionally built to maximize revenue without adding complexity.
+    </div>
+
+                <div class="about_button_wrap">
+                    <button
+                        class="about_get_app_button"
+                        onclick="open_deanes_subscription_popup();">
+                        Get the app
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+<!--block about_section_v21-->
+
+
+
+
+
+
+<div class="page_divider_black"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div style="height:60px"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Carousel Blocks Shared Style -->
+
+    <style>
+
+        /* ======================================================
+           DESKTOP (default)
+           ====================================================== */
+
+        .fs_combo_wrap_v1 {
+            width: 100%;
+            padding: 40px 0 40px;
+        }
+
+        .fs_combo_container_v1 {
+            width:  60%;
+            margin: 0 auto;
+        }
+
+        .fs_combo_track_v1 {
+            white-space: nowrap;
+            overflow-x: auto;
+            padding: 0 2vw;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .fs_combo_card_v1 {
+            display: inline-block;
+            vertical-align: top;
+            width: 30%;
+            margin-right: 44px;
+            scroll-snap-align: start;
+            white-space: normal;
+            text-align: center;
+        }
+
+        .fs_combo_image_v1 {
+            width: 100%;
+            display: block;
+            background: #fff;
+            border-radius: 14px;
+            margin-bottom: 28px;
+        }
+
+        /* SECTION TITLE */
+        .fs_combo_card_title_v1 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: 28px;
+            color: #3b3b3c;
+            text-align: center;
+            margin: 0px auto 0px;
+            width: 90%;
+            margin-bottom: 20px;
+        }
+
+        /* BODY TEXT */
+        .fs_combo_card_text_v1 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 15px;
+            color: #475569;
+            line-height: 1.65;
+            max-width: 60%;
+            margin: 0 auto;
+            overflow: hidden;
+            margin-bottom: 150px;
+            margin-top: -20px;
+        }
+
+        .fs_combo_card_text_v1 .red {
+            color: black;
+            font-weight: 600;
+        }
+
+        /* READ MORE */
+        .fs_combo_ellipsis {
+            color: #e63946;
+            font-weight: 900;
+            letter-spacing: 1px;
+            font-size: 22px;
+        }
+
+        .fs_combo_read_toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 6px;
+            padding: 4px 12px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2563eb;
+            background: #eef2ff;
+            border: 1px solid #c7d2fe;
+            border-radius: 999px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .fs_combo_read_toggle:hover {
+            background: #e0e7ff;
+            border-color: #a5b4fc;
+        }
+
+        .fs_combo_read_toggle:focus {
+            outline: none;
+        }
+
+        /* ======================================================
+           MOBILE (INTENTIONALLY WIDE)
+           ====================================================== */
+
+        @media (max-width: 700px) {
+
+            .fs_combo_wrap_v1 {
+                padding: 10px 0 10px;
+            }
+
+            .fs_combo_container_v1 {
+                width: 90%;
+            }
+
+            .fs_combo_track_v1 {
+                padding: 0 6vw;
+            }
+
+            .fs_combo_card_v1 {
+                width: 55%;
+                margin-right: 5px;
+            }
+
+            .fs_combo_image_v1 {
+                border-radius: 0px;
+                margin-bottom: 22px;
+            }
+
+            .fs_combo_card_title_v1 {
+                font-size: 20px;
+                margin: 0px auto 0px;
+                padding: 0 0px;
+                text-align: center;
+                width: 92%;
+                margin-top: 30px;
+            }
+
+            .fs_combo_card_text_v1 {
+                max-width: 88%;
+                font-size: 14px;
+                margin: 0 auto;
+                margin-bottom: 50px;
+                padding-left: 5px;
+            }
+        }
+    </style>
+
+
+    <style>
+        .key_features_title_v7 {
+            font-family: 'Poppins', sans-serif !important;
+            font-weight: 800;
+            font-size: 100px;            /* BIG again */
+            color: #292929 !important;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+
+            text-align: center;         /* THIS was missing */
+            margin: 60px auto 30px;     /* centered block spacing */
+            width: 100%;                /* allow centering */
+        }
+
+
+        @media (max-width: 700px) {
+
+            .key_features_title_v7 {
+            font-size: 38px;            /* BIG again */
+            }}
+    </style>
+<!-- Carousel Blocks Shared Style -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h3 class="key_features_title_v7" >KEY FEATURES:</h3>
+
+
+
+
+
+
+    <div style="height:40px"></div>
+
+
+
+
+    <style>
+    .fs_bullet_dot {
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        background: black;
+        border-radius: 50%;
+        margin-right: 5px;
+        vertical-align: middle;
+    }
+
+
+    </style>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Row  1 all screens -->
+
+
+    <div class="fs_combo_wrap_v1">
+        <div class="fs_combo_container_v1 fs_all_caps">
+
+
+    <div class="fs_combo_card_title_v1">
+        <span class="fs_bullet_dot"></span>
+        SIMPLE, INTUITIVE Back end OPERATING SYSTEM THAT WORKS ON ANY DEVICE
+        <img
+            src="static/front_end/icons/slide.png"
+            alt=""
+            style="height:28px; vertical-align:middle; margin-left:8px;"
+        >
+    </div>
+
+
+            <div style="height:20px" ></div>
+
+
+        <div class="fs_combo_track_v1">
+
+            {% for img in row_1_image_list %}
+                <div class="fs_combo_card_v1">
+                    <img class="fs_combo_image_v1" src="{{ img }}">
+                </div>
+            {% endfor %}
+
+        </div>
+
+        </div>
+    </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const track = document.querySelector(".fs_combo_track_v1");
+                if (track) track.style.scrollBehavior = "smooth";
+            });
+        </script>
+
+
+
+
+
+
+
+
+    <div class="fs_combo_card_text_v1">
+
+        <span class="fs_combo_preview_text">
+            The system is designed to feel
+            <span class="red">immediately familiar</span>,
+            so you’re not learning software — you’re just using it.
+            Everything is organized into clear, purpose-built
+            <span class="red">apps</span>,
+            making event management feel simple instead of technical.
+            When you select an
+            <span class="red">event</span>,
+            the entire platform switches into that context —
+            databases, images, schedules, tickets, seating, auctions,
+            and live views all update
+            <span class="red">specifically for that event</span>.
+            <span class="fs_combo_ellipsis">…</span>
+
+            <button class="fs_combo_read_toggle read_more_btn"
+                    onclick="toggle_combo_text(this)">
+                Read more
+            </button>
+        </span>
+
+        <span class="fs_combo_more_text" style="display:none;">
+            <br><br>
+
+            Each app behaves as if it exists only for that event,
+            eliminating cross-event confusion and manual cleanup.
+            You are never copying data, re-uploading assets,
+            or wondering which settings apply where.
+            Everything stays isolated, organized,
+            and intentionally scoped to the event you’re working on.
+
+            <br><br>
+
+            This structure allows teams to move quickly and confidently.
+            Staff can jump between ticket sales, seating,
+            auctions, raffles, check-in, and reporting
+            without changing tools or mental context.
+            Updates made in one place immediately reflect everywhere else,
+            keeping the system consistent and reliable
+            throughout planning, setup, and event day.
+
+            <br><br>
+
+            The experience works seamlessly across
+            <span class="red">iPhone, desktop, Mac, tablet, and web</span>,
+            so staff, volunteers, and guests can all use the platform
+            on the devices they already have.
+            There is no training period, no learning curve,
+            and no technical barrier.
+            People intuitively understand how to navigate the system,
+            which keeps teams focused on running the event
+            instead of managing software.
+
+            <br><br>
+
+            <button class="fs_combo_read_toggle read_less_btn"
+                    onclick="toggle_combo_text(this)">
+                Read less
+            </button>
+        </span>
+
+    </div>
+
+
+
+    <script>
+        function toggle_combo_text(btn) {
+            const container = btn.closest('.fs_combo_card_text_v1');
+            const moreText  = container.querySelector('.fs_combo_more_text');
+            const ellipsis  = container.querySelector('.fs_combo_ellipsis');
+            const readMore  = container.querySelector('.read_more_btn');
+
+            // capture scroll + starting height
+            const scrollY     = window.scrollY;
+            const startHeight = container.offsetHeight;
+
+            // lock height so layout doesn’t snap
+            container.style.height   = startHeight + "px";
+            container.style.overflow = "hidden";
+
+            const isOpening = moreText.style.display === "none";
+
+            if (isOpening) {
+                moreText.style.display = "inline";
+                ellipsis.style.display = "none";
+                readMore.style.display = "none";
+            } else {
+                moreText.style.display = "none";
+                ellipsis.style.display = "inline";
+                readMore.style.display = "inline-flex";
+            }
+
+            // measure new height after DOM change
+            const endHeight = container.scrollHeight;
+
+            requestAnimationFrame(() => {
+                container.style.transition = "height 0.25s ease";
+                container.style.height     = endHeight + "px";
+
+                // keep viewport anchored
+                window.scrollTo({
+                    top: scrollY,
+                    behavior: "instant"
+                });
+            });
+
+            // cleanup after animation
+            setTimeout(() => {
+                container.style.height     = "";
+                container.style.overflow   = "";
+                container.style.transition = "";
+            }, 260);
+        }
+    </script>
+<!-- Row  1 all screens -->
+
+
+
+
+
+
+
+
+
+<!-- Row 2 MULTIPLE SALES CHANNELS -->
+
+    <div class="fs_combo_wrap_v1">
+        <div class="fs_combo_container_v1">
+
+
+
+
+
+            <div class="fs_combo_card_title_v1 fs_all_caps">
+                <span class="fs_bullet_dot"></span>
+    Three Built in  fundraising apps to <strong>Maximize Event Day Revenue:</strong>
+
+    <span style="color:#3c92f2; font-weight:700;">Silent Auction</span>, 
+    <span style="color:#f0a8a6; font-weight:700;">Raffles</span>,
+    <span style="color:#7a1f3d; font-weight:700;">Live Auction</span> 
+
+
+    <img
+        src="static/front_end/icons/slide.png"
+        alt=""
+        style="height:28px; vertical-align:middle; margin-left:8px;"
+    >
+
+
+    </div>
+
+
+
+
+
+
+
+            <div style="height:30px"></div>
+
+            <div class="fs_combo_track_v1">
+                {% for img in row_2_image_list %}
+                <div class="fs_combo_card_v1">
+                    <img class="fs_combo_image_v1" src="{{ img }}">
+                </div>
+                {% endfor %}
+            </div>
+
+        </div>
+    </div>
+
+    <style>
+    .fs_combo_card_text_v1 .red {
+        color: black;
+        font-weight: 600;
+    }
+
+    /* ================= VIDEO MODAL ================= */
+    .video_overlay_inline {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0,0,0,0.85);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 2147483647;
+    }
+
+    .video_box_inline {
+        width: 50%;
+        max-width: 900px;
+        aspect-ratio: 16 / 9;
+        background: #000;
+    }
+
+    .video_box_inline iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+
+    .fs_combo_action_row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .fs_combo_action_row button {
+        display: inline-flex;
+    }
+
+
+
+
+
+    @media(max-width:650px){
+        .video_box_inline {
+            width: 90%;
+        }
+    }
+    </style>
+
+
+
+
+
+    <div style="height:10px"></div>
+
+
+
+    <div class="fs_combo_card_text_v1">
+
+        <!-- ===== PREVIEW TEXT ===== -->
+        <span class="fs_combo_preview_text">
+            The platform is built around
+            <span class="red">multiple integrated revenue streams</span>
+            that are designed to work together,
+            not compete with each other.
+            You operate from a
+            <span class="red">public front-end event website</span>
+            where you can sell
+            <span class="red">individual tickets</span>,
+            <span class="red">full tables</span>,
+            and
+            <span class="red">custom sponsorship levels</span>
+            before the event even begins.
+            Sponsor logos and placements appear across the website,
+            printed materials,
+            and event-facing screens,
+            creating early visibility and sellable exposure.
+            <span class="fs_combo_ellipsis">…</span>
+
+            <button class="fs_combo_read_toggle read_more_btn"
+                    onclick="toggle_combo_text(this)">
+                Read more
+            </button>
+
+            <!-- video lives here when collapsed -->
+            <span class="video_slot_preview"></span>
+        </span>
+
+        <!-- ===== EXPANDED TEXT ===== -->
+        <span class="fs_combo_more_text" style="display:none;">
+            <br><br>
+
+            In addition to ticket and sponsorship sales,
+            the platform supports
+            <span class="red">general donations</span>
+            from supporters who simply want to give,
+            allowing contributions outside of auctions or raffles
+            without friction or manual handling.
+
+            <br><br>
+
+            On the event side, the system includes
+            <span class="red">three core revenue experiences</span>:
+            <span class="red">silent auctions</span>,
+            <span class="red">raffle items</span>,
+            and
+            <span class="red">live auctions</span>.
+            Each operates as its own dedicated app
+            with independent pages,
+            schedules,
+            pricing rules,
+            and bidding logic,
+            while remaining fully connected
+            to the same event, guests, and reporting.
+
+            <br><br>
+
+            Every auction and raffle item automatically generates a
+            <span class="red">print-ready display card</span>
+            that includes photos,
+            item details,
+            and a QR code
+            linking directly to the correct live bidding or raffle page.
+            With a single click,
+            all cards are bundled into a
+            <span class="red">single printable PDF</span>,
+            whether you have five items or sixty.
+            Guests scan once and are taken instantly
+            to the correct page to bid, buy, or enter,
+            eliminating staff involvement and delays.
+
+            <br><br>
+
+            During the event,
+            the platform’s
+            <span class="red">display mode</span>
+            runs on TVs and projectors,
+            showcasing live auction items,
+            current prices,
+            countdowns,
+            and rotating sponsor placements.
+            These screens are often sold as
+            <span class="red">premium sponsorship opportunities</span>,
+            creating an additional revenue stream
+            that many events use to offset or fully cover platform costs.
+
+            <br><br>
+
+            Sponsor visibility continues throughout the experience.
+            A
+            <span class="red">live sponsor ticker</span>
+            runs across auction, raffle, and live pages,
+            as well as display screens,
+            keeping sponsors visible wherever guests are engaging.
+            These placements are sellable,
+            measurable,
+            and persist across both web and event-night displays.
+
+            <br><br>
+
+            Payments can be completed
+            <span class="red">directly by guests</span>
+            on their own devices
+            or
+            <span class="red">by staff on the back end</span>
+            when needed,
+            using secure,
+            bank-level processing.
+            All revenue streams stay fully connected
+            to receipts,
+            reporting,
+            winner confirmation,
+            and live status updates,
+            ensuring nothing is lost,
+            duplicated,
+            or manually reconciled.
+
+            <br><br>
+
+            <div class="fs_combo_action_row">
+                <button class="fs_combo_read_toggle read_less_btn"
+                        onclick="toggle_combo_text(this)">
+                    Read less
+                </button>
+
+                <!-- video lives here when expanded -->
+                <span class="video_slot_expanded"></span>
+            </div>
+        </span>
+
+        <!-- ===== SINGLE VIDEO BUTTON (ONE ONLY) ===== -->
+        <button style="margin-top: 10px"
+                class="fs_combo_read_toggle watch_video_btn"
+                data_video_url="https://www.youtube.com/embed/NpEaa2P7qZI"
+                onclick="open_inline_video(this)">
+            Watch Video
+        </button>
+
+    </div>
+
+    <!-- ===== VIDEO OVERLAY ===== -->
+    <div id="video_overlay_inline"
+         class="video_overlay_inline"
+         onclick="close_inline_video(event)">
+        <div class="video_box_inline">
+            <iframe id="video_iframe_inline"
+                    src=""
+                    allow="autoplay; encrypted-media"
+                    allowfullscreen></iframe>
+        </div>
+    </div>
+
+
+
+
+
+    <script>
+    /* ===== READ MORE TOGGLE ===== */
+    function toggle_combo_text(btn) {
+        const container   = btn.closest('.fs_combo_card_text_v1');
+        const moreText    = container.querySelector('.fs_combo_more_text');
+        const ellipsis    = container.querySelector('.fs_combo_ellipsis');
+        const readMore    = container.querySelector('.read_more_btn');
+        const videoBtn    = container.querySelector('.watch_video_btn');
+        const slotPreview = container.querySelector('.video_slot_preview');
+        const slotExpand  = container.querySelector('.video_slot_expanded');
+
+        const scrollY = window.scrollY;
+        const startHeight = container.offsetHeight;
+
+        container.style.height = startHeight + "px";
+
+        const isOpening = moreText.style.display === "none";
+
+        if (isOpening) {
+            moreText.style.display = "inline";
+            ellipsis.style.display = "none";
+            readMore.style.display = "none";
+            slotExpand.appendChild(videoBtn);
+        } else {
+            moreText.style.display = "none";
+            ellipsis.style.display = "inline";
+            readMore.style.display = "inline-flex";
+            slotPreview.appendChild(videoBtn);
+        }
+
+        const endHeight = container.scrollHeight;
+
+        requestAnimationFrame(() => {
+            container.style.height = endHeight + "px";
+            window.scrollTo({ top: scrollY, behavior: "instant" });
+        });
+
+        setTimeout(() => {
+            container.style.height = "";
+        }, 230);
+    }
+
+    /* ===== VIDEO POPUP ===== */
+    (function(){
+        const overlay = document.getElementById("video_overlay_inline");
+        const iframe  = document.getElementById("video_iframe_inline");
+
+        if (overlay.parentElement !== document.body) {
+            document.body.appendChild(overlay);
+        }
+
+        window.open_inline_video = function(btn){
+            const url = btn.getAttribute("data_video_url");
+            if (!url) return;
+
+            iframe.src = url + "?autoplay=1";
+            overlay.style.display = "flex";
+            document.body.style.overflow = "hidden";
+        };
+
+        window.close_inline_video = function(e){
+            if (!e || e.target === overlay) {
+                iframe.src = "";
+                overlay.style.display = "none";
+                document.body.style.overflow = "";
+            }
+        };
+    })();
+    </script>
+<!-- Row 2 MULTIPLE SALES CHANNELS -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Row 3 Event Websites -->
+
+        <div class="fs_combo_wrap_v1">
+            <div class="fs_combo_container_v1">
+
+
+
+            <div class="fs_combo_card_title_v1">
+                <span class="fs_bullet_dot"></span>
+                BUILT-IN 
+
+
+                    <span style="color:#8f9bc3; font-weight:800;">EVENT WEBSITE </span> 
+
+                DESIGNED FOR PROMOTION, TICKET SALES, AND DONATIONS
+
+
+
+
+        <img
+            src="static/front_end/icons/slide.png"
+            alt=""
+            style="height:28px; vertical-align:middle; margin-left:8px;"
+        >
+
+
+            </div>
+
+
+
+            <div style="height:20px"></div>
+
+            <div class="fs_combo_track_v1">
+
+                {% for img in row_3_image_list %}
+                <div class="fs_combo_card_v1">
+                    <img class="fs_combo_image_v1" src="{{ img }}">
+                </div>
+                {% endfor %}
+
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const track = document.querySelector(".fs_combo_track_v1");
+        if (track) track.style.scrollBehavior = "smooth";
+    });
+    </script>
+
+    <style>
+    .fs_combo_card_text_v1 .red {
+        color: black;
+        font-weight: 600;
+    }
+    </style>
+
+
+
+
+    <div class="fs_combo_card_text_v1">
+
+        <!-- ===== PREVIEW TEXT ===== -->
+        <span class="fs_combo_preview_text">
+            The platform includes a
+            <span class="red">front-end event website</span>
+            with a built-in
+            <span class="red">edit mode</span>,
+            allowing you to instantly switch between viewing the site
+            exactly as guests see it
+            and making live updates behind the scenes.
+            Editing works the way people expect —
+            upload images,
+            update text,
+            adjust colors,
+            rearrange sections,
+            and control visibility —
+            with changes that
+            <span class="red">take effect immediately</span>
+            across the event website
+            and all related ticket and purchase pages.
+            <span class="fs_combo_ellipsis">…</span>
+
+            <button class="fs_combo_read_toggle read_more_btn"
+                    onclick="toggle_combo_text(this)">
+                Read more
+            </button>
+
+            <!-- Watch Video lives here when collapsed -->
+            <span class="video_slot_preview"></span>
+        </span>
+
+        <!-- ===== EXPANDED TEXT ===== -->
+        <span class="fs_combo_more_text" style="display:none;">
+            <br><br>
+
+            The event website can link back to your main organization website,
+            or it can run as a
+            <span class="red">fully standalone event site</span>
+            with its own navigation and branding.
+            You control whether guests see a back button,
+            where links point,
+            and how the site is shared.
+            The site can be promoted publicly,
+            sent directly to guests,
+            or embedded into email campaigns and text messages
+            to support
+            <span class="red">pre-event promotion and outreach</span>.
+
+            <br><br>
+
+            From this front-end website,
+            guests can
+            <span class="red">buy sponsorships</span>,
+            <span class="red">purchase full tables</span>,
+            or
+            <span class="red">buy individual tickets</span>
+            from a single, unified page.
+            Pricing,
+            quantity limits,
+            seat counts,
+            and availability are all managed
+            from the
+            <span class="red">backend</span>,
+            with
+            <span class="red">real-time inventory tracking</span>
+            to prevent overselling.
+
+            <br><br>
+
+            Payments are processed through
+            <span class="red">Stripe</span>,
+            providing
+            <span class="red">bank-level security</span>,
+            fraud protection,
+            and compliance out of the box.
+
+            <br><br>
+
+            After purchase,
+            guests immediately receive a confirmation email
+            containing their tickets,
+            including a
+            <span class="red">PDF with a unique QR code</span>.
+
+            <br><br>
+
+            Sponsor logos,
+            images,
+            descriptions,
+            and links are managed centrally
+            and appear consistently across the event website,
+            ticket pages,
+            auction pages,
+            raffle pages,
+            and optional
+            <span class="red">on-site display screens</span>.
+
+            <br><br>
+
+            The same website content feeds into
+            printed materials,
+            QR codes,
+            and live event experiences,
+            ensuring branding,
+            pricing,
+            and messaging stay consistent
+            before,
+            during,
+            and after the event.
+
+            <br><br>
+
+            <button class="fs_combo_read_toggle read_less_btn"
+                    onclick="toggle_combo_text(this)">
+                Read less
+            </button>
+
+            <!-- Watch Video lives here when expanded -->
+            <span class="video_slot_expanded"></span>
+        </span>
+
+        <!-- ===== SINGLE WATCH VIDEO BUTTON (ONE ONLY) ===== -->
+        <button class="fs_combo_read_toggle watch_video_btn"
+                data_video_url="https://www.youtube.com/embed/CYDP_8UTAus"
+                onclick="open_inline_video(this)">
+            Watch Video
+        </button>
+
+    </div>
+
+    <script>
+    function toggle_combo_text(btn) {
+        const container   = btn.closest('.fs_combo_card_text_v1');
+        const moreText    = container.querySelector('.fs_combo_more_text');
+        const ellipsis    = container.querySelector('.fs_combo_ellipsis');
+        const readMore    = container.querySelector('.read_more_btn');
+        const videoBtn    = container.querySelector('.watch_video_btn');
+        const slotPreview = container.querySelector('.video_slot_preview');
+        const slotExpand  = container.querySelector('.video_slot_expanded');
+
+        if (moreText.style.display === "none") {
+            moreText.style.display = "inline";
+            ellipsis.style.display = "none";
+            readMore.style.display = "none";
+            slotExpand.appendChild(videoBtn);
+        } else {
+            moreText.style.display = "none";
+            ellipsis.style.display = "inline";
+            readMore.style.display = "inline-flex";
+            slotPreview.appendChild(videoBtn);
+        }
+    }
+    </script>
+<!-- Row 3 Event Websites -->
+
+
+
+
+
+
+
+
+
+
+
+
+<!--block view_all_key_features_button_v3-->
+
+    <style>
+        .view_all_features_btn_wrapper {
+            text-align: center;
+            margin-top: -110px;
+            margin-bottom: 90px;
+            font-size: 15px;
+        }
+
+        /* === Loading Overlay === */
+        .key_features_loading_overlay {
+            position: fixed;
+            inset: 0;
+
+            width: 100vw;
+            height: 100vh;      /* 👈 THIS IS THE KEY */
+
+            background: rgba(0,0,0,0.88);
+            z-index: 9999;
+
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+
+            pointer-events: none;
+        }
+
+
+        .key_features_loading_overlay img {
+            width: 250px;
+            margin-bottom: 22px;
+        }
+
+        .key_features_loading_text {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 18px;
+            color: #ffffff;
+            letter-spacing: 0.6px;
+        }
+
+        @media (max-width: 700px) {
+            .view_all_features_btn_wrapper {
+                margin-top: -20px;
+            }
+
+            .key_features_loading_text {
+                font-size: 16px;
+            }
+        }
+    </style>
+
+    <div class="view_all_features_btn_wrapper">
+        <button id="demo_now_secondary_button"
+                class="unique_big_button"
+                onclick="trigger_key_features_load()">
+            VIEW ALL KEY FEATURES
+        </button>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="key_features_loading_overlay" class="key_features_loading_overlay">
+        <img src="/static/gifs/loading.png">
+        <div class="key_features_loading_text">
+            Loading Key Features…
+        </div>
+    </div>
+
+    <script>
+        function trigger_key_features_load() {
+            const overlay = document.getElementById("key_features_loading_overlay");
+
+            // show overlay
+            overlay.style.display = "flex";
+
+            // force browser to paint before navigating
+            requestAnimationFrame(function () {
+                setTimeout(function () {
+                    window.location.href = "/key_features";
+                }, 300);
+            });
+        }
+    </script>
+<!--block view_all_key_features_button_v3-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--block page_divider_black_v1-->
+
+
+
+    <div class="page_divider_black"></div>
+<!--block page_divider_black_v1-->
+
+
+
+
+
+
+
+
+<!--block testimonials_section_v3-->
+
+    <style>
+        /* === Desktop Styles === */
+        .testimonials_section {
+            background: #f8fafc;
+            color: #0f172a;
+            padding: 100px 20px;
+        }
+
+        .testimonials_section .container {
+            max-width: 950px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .testimonials_section h3 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: 92px;
+            margin-bottom: 60px;
+            color: #202020;
+        }
+
+        .testimonials_grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .testimonial {
+            background: #fff;
+            border-radius: 14px;
+            padding: 28px 22px 34px;
+            box-shadow: 0 6px 22px rgba(0,0,0,0.06);
+            font-family: 'Poppins', sans-serif;
+            transition: transform .25s ease, box-shadow .25s ease;
+        }
+
+        .testimonial:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .testimonial p {
+            font-size: 16px;
+            line-height: 1.7;
+            color: #334155;
+            font-weight: 500;
+            margin-bottom: 18px;
+        }
+
+        .testimonial .author {
+            font-weight: 700;
+            font-size: 15px;
+            color: #3c94f7;
+        }
+
+        /* === Mobile Styles === */
+        @media (max-width: 900px) {
+            .testimonials_grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            H3{
+                font-size: 40px; important
+            }
+        }
+
+        @media (max-width: 600px) {
+            .testimonials_section {
+                padding: 70px 16px;
+            }
+
+            .testimonials_section h3 {
+                font-size: 32px;
+                margin-bottom: 40px;
+            }
+
+            .testimonials_grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .testimonial {
+                padding: 24px 18px 30px;
+            }
+        }
+    </style>
+
+
+
+
+
+    <div class="testimonials_section fade-in">
+        <div class="container">
+
+
+
+<h3 class="key_features_title_v7" >Reviews:</h3>
+
+            <div style="height: 50px"></div>
+
+            <div class="testimonials_grid">
+                <div class="testimonial">
+                    <p>"Our charity auction raised 40% more this year because BlackTieEvent made bidding fun and effortless."</p>
+                    <div class="author">– Jessica L., Non-Profit Director</div>
+                </div>
+                <div class="testimonial">
+                    <p>"Setup took minutes. Guests loved scanning and bidding right from their phones — it felt modern and smooth."</p>
+                    <div class="author">– Mark S., Event Organizer</div>
+                </div>
+                <div class="testimonial">
+                    <p>"The data export feature saved hours in post-event reporting. Our finance team was thrilled."</p>
+                    <div class="author">– Susan R., Corporate Philanthropy</div>
+                </div>
+                <div class="testimonial">
+                    <p>"Our school fundraiser finally felt professional. Parents were amazed by how easy it was to participate."</p>
+                    <div class="author">– Carla D., PTA Chair</div>
+                </div>
+                <div class="testimonial">
+                    <p>"The real-time leaderboard kept everyone engaged — donors were competing to outbid each other in a good way!"</p>
+                    <div class="author">– Andrew F., Charity Host</div>
+                </div>
+                <div class="testimonial">
+                    <p>"BlackTieEvent made it effortless to track winners, payments, and donations all in one dashboard. A game changer."</p>
+                    <div class="author">– Melissa K., Fundraising Coordinator</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Reserved for future animations or rotating testimonial carousel logic
+    </script>
+<!--block testimonials_section_v3-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--block mission_section_v2-->
+    <div  style="background: #202020" class="hero fade-in">
+        <div class="container">
+            <h1>The Mission<h1>
+
+            <div style="height:30px"></div>
+
+            <p>
+                To become the world’s most trusted event-fundraising platform — empowering every cause, school, and charity to connect with their community through digital innovation.
+            </p>
+
+            <div style="height:20px"></div>
+
+            <p>
+                We believe fundraising should be easy, interactive, and transparent. By combining technology and design, BlackTieEvent.app turns complex event logistics into simple, automated workflows that save hours of admin time while maximizing donor engagement.
+            </p>
+
+            <div style="height:20px"></div>
+
+
+            <p> 
+
+            Whether it’s a school auction, a charity gala, or a local community raffle — our mission is to give every organizer the tools to raise more money, engage more people, and make every event a success.
+
+            </p>
+
+
+            <div style="height:20px"></div>
+        </div>
+    </div>
+<!--block mission_section_v2-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--block who_we_are_section_v1-->
+
+    <style>
+        /* === Desktop Styles === */
+        .who_we_are_section {
+            background: #ffffff;
+            color: #0f172a;
+            padding: 100px 20px;
+        }
+
+        .who_we_are_section .container {
+            max-width: 950px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .who_we_are_section h3 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: 62px;
+            margin-bottom: 60px;
+            color: #e93439;
+        }
+
+        .who_we_are_grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .who_we_are_card {
+            background: #f8fafc;
+            border-radius: 14px;
+            padding: 34px 24px 38px;
+            box-shadow: 0 6px 22px rgba(0,0,0,0.06);
+            font-family: 'Poppins', sans-serif;
+            transition: transform .25s ease, box-shadow .25s ease;
+        }
+
+        .who_we_are_card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .who_headshot_placeholder {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            margin: 0 auto 20px;
+        }
+
+        .who_we_are_card p {
+            font-size: 16px;
+            line-height: 1.7;
+            color: #334155;
+            font-weight: 500;
+            margin-bottom: 18px;
+        }
+
+        .who_name {
+            font-weight: 800;
+            font-size: 16px;
+            color: #0f172a;
+        }
+
+        .who_role {
+            font-weight: 600;
+            font-size: 14px;
+            color: #3c94f7;
+            margin-top: 4px;
+        }
+
+        /* === Mobile Styles === */
+        @media (max-width: 900px) {
+            .who_we_are_grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .who_we_are_section {
+                padding: 70px 16px;
+            }
+
+            .who_we_are_section h3 {
+                font-size: 32px;
+                margin-bottom: 40px;
+            }
+
+            .who_we_are_grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .who_we_are_card {
+                padding: 28px 20px 32px;
+            }
+        }
+    </style>
+
+    <div class="who_we_are_section fade-in">
+        <div class="container">
+            <h3 style="color: #202020;" >Who We Are</h3>
+
+            <div style="height: 50px"></div>
+
+            <div class="who_we_are_grid">
+                <div class="who_we_are_card">
+                    <div class="who_headshot_placeholder"></div>
+                    <p>
+                        We started BlackTieEvent after seeing how fragmented and outdated
+                        fundraising tools had become. Our focus is building software
+                        that feels modern, intuitive, and actually helps nonprofits
+                        raise more with less stress.
+                    </p>
+                    <div class="who_name">Alex Morgan</div>
+                    <div class="who_role">Founder & Product Lead</div>
+                </div>
+
+                <div class="who_we_are_card">
+                    <div class="who_headshot_placeholder"></div>
+                    <p>
+                        Our engineering philosophy is simple: reliability first,
+                        clarity always. Every feature is designed to work smoothly
+                        on phones, tablets, and desktops without adding complexity
+                        for event staff or guests.
+                    </p>
+                    <div class="who_name">Jordan Patel</div>
+                    <div class="who_role">Lead Engineer</div>
+                </div>
+
+                <div class="who_we_are_card">
+                    <div class="who_headshot_placeholder"></div>
+                    <p>
+                        We work closely with real nonprofits and event organizers
+                        to make sure BlackTieEvent fits real-world workflows, not
+                        idealized demos. Feedback from live events shapes everything
+                        we build.
+                    </p>
+                    <div class="who_name">Taylor Reed</div>
+                    <div class="who_role">Customer Experience</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Reserved for future animations or profile modal logic
+    </script>
+<!--block who_we_are_section_v1-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- CTA -->
+
+
+
+
+
+    <div style="background: #202020" class="hero fade-in">
+        <div class="container">
+            <h1>Ready to Transform Your Next Event?</h1>
+
+            <div style="height:30px"></div>
+
+            <p>
+               Join organizations nationwide who are raising more money with less stress.
+
+
+                <div style="height:30px"></div>
+
+
+            <div style="display:flex;justify-content:center;">
+                <button class="hero_button" onclick="open_deanes_contact_popup();">
+                    Get in Contact
+                </button>
+
+            </div>
+
+
+
+
+
+
+
+            <div style="height:20px"></div>
+        </div>
+    </div>
+<!-- CTA -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <!-- FOOTER -->
+            <footer style="background: black;" class="fade-in">
+                <div class="footer_logo">BlackTieEvent.app</div>
+                <div>©2025 BlackTieEvent Inc. All rights reserved.</div>
+                <div style="margin-top:10px;">
+                    <a href="/">Home</a>|
+                    <a href="/privacy">Privacy</a>|
+                    <a href="/contact">Contact</a>
+                </div>
+            </footer>
+        <!-- FOOTER -->
+
+
+
+
+
+
+
+
+
+
+    </div>
+
+    <script>
+        document.querySelectorAll('#about_sandbox_v8 .fade-in').forEach(el=>{
+            const io=new IntersectionObserver(entries=>{
+                entries.forEach(e=>{
+                    if(e.isIntersecting){e.target.classList.add('show');}
+                });
+            },{threshold:0.2});
+            io.observe(el);
+        });
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

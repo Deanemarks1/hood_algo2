@@ -1,0 +1,441 @@
+<!--block admin_toolbar_modern_isolated_v13-->
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700;800;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700;800&display=swap');
+
+    :root {
+        --toolbar_blue: #3b3b3b;
+        --toolbar_white: #ffffff;
+        --BlackTieEvent.app_blue: #3c92f2;
+    }
+
+
+
+    /*****************************************************
+     TOP TOOLBAR
+     Desktop: sticky
+     Mobile: NOT sticky (normal block, scrolls away)
+    *****************************************************/
+    .admin_toolbar_v13 {
+        position: relative;  /* REQUIRED for z-index to work */
+        width: 100%;
+        background: var(--toolbar_blue);
+        color: var(--toolbar_white);
+        font-family: 'Poppins', sans-serif;
+        height: 62px;
+        box-sizing: border-box;
+        z-index: 1000;
+    }
+
+        }
+
+        /* Sticky ONLY on desktop */
+        @media (min-width:721px){
+            .admin_toolbar_v13 {
+                position: fixed;
+                top: 0;
+                left: 0;
+                z-index: 9000;
+            }
+            body {
+                padding-top: 62px; /* shift page down under bar */
+            }
+        }
+
+        /* Mobile = NOT sticky */
+        @media (max-width:720px){
+            .admin_toolbar_v13 {
+                position: relative; /* normal block */
+            }
+            body {
+                padding-top: 0px !important; /* no shift */
+            }
+        }
+
+
+        .admin_toolbar_v13_inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+            padding: 0 25px;
+            position: relative;
+        }
+
+        /* Center title */
+        .admin_toolbar_v13_center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        .admin_toolbar_v13_center_text {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .admin_toolbar_v13_pipe { opacity: 0.4; }
+
+        /* Buttons */
+        .admin_toolbar_v13_button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .admin_toolbar_v13_button img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .admin_toolbar_v13_logo img {
+            width: 46px;
+            height: 46px;
+            object-fit: contain;
+        }
+
+
+
+
+        /*****************************************************
+         MOBILE — hide top icons exactly like v10_8
+        *****************************************************/
+        @media (max-width:720px){
+
+            .admin_toolbar_v13_left,
+            .admin_toolbar_v13_right,
+            .admin_toolbar_v13_logo {
+                display:none !important;
+            }
+
+            .admin_toolbar_v13 {
+                height: 54px;
+            }
+
+            .admin_toolbar_v13_inner {
+                padding: 0 17px;
+            }
+
+            .admin_toolbar_v13_center_text {
+                font-size: clamp(14px, 4vw, 18px);
+                gap: 6px;
+            }
+        }
+
+
+
+
+        /*****************************************************
+         MOBILE BOTTOM TOOLBAR (works exactly like v11)
+        *****************************************************/
+        .admin_toolbar_v13_mobile_footer {
+            display: none;
+        }
+
+        @media (max-width:720px){
+            .admin_toolbar_v13_mobile_footer {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 56px;
+                background: var(--toolbar_blue);
+                color: var(--toolbar_white);
+                z-index: 999999;
+
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0 18px;
+                box-sizing: border-box;
+                border-top: 1px solid rgba(255,255,255,0.15);
+
+                font-family: 'Poppins', sans-serif;
+            }
+
+            .admin_toolbar_v13_mobile_center {
+                font-size: clamp(12px, 4vw, 16px);
+                font-weight: 800;
+                text-transform: uppercase;
+            }
+
+            body {
+                padding-bottom: 60px; /* space for bottom bar */
+            }
+        }
+
+
+
+
+        /*****************************************************
+         SweetAlert popup styling
+        *****************************************************/
+        .styled-swal-popup {
+            border-radius: 18px !important;
+            padding: 25px 28px !important;
+            box-shadow: 0 6px 22px rgba(0,0,0,.18) !important;
+            width: 420px !important;
+        }
+
+        @media (max-width:600px){
+            .styled-swal-popup {
+                width: 92% !important;
+                padding: 22px !important;
+            }
+        }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+
+
+<!-- ===================== TOP TOOLBAR ===================== -->
+<div class="admin_toolbar_v13">
+    <div class="admin_toolbar_v13_inner">
+
+        <!-- LEFT -->
+        <div class="admin_toolbar_v13_left">
+            {% if request.path == url_for('admin_home') %}
+                <div class="admin_toolbar_v13_logo" id="admin_toolbar_v13_logo_btn">
+                    <img src="/static/system/fav.png" alt="Logo">
+                </div>
+            {% else %}
+                <a class="admin_toolbar_v13_button" href="{{ url_for('admin_home') }}">
+                    <img src="/static/back_end/icons/back_button.png" alt="Back">
+                </a>
+            {% endif %}
+        </div>
+
+        <!-- CENTER -->
+
+
+<style>
+  
+
+  .admin_toolbar_v13_desktop_only {
+    display: none;
+}
+
+@media (min-width: 721px) {
+    .admin_toolbar_v13_desktop_only {
+        display: inline;
+    }
+}
+
+</style>
+
+
+<div class="admin_toolbar_v13_center">
+    <div class="admin_toolbar_v13_center_text">
+        <span>{{ session_data.corporate_name }}</span>
+        <span class="admin_toolbar_v13_pipe">|</span>
+        <span>{{ session_data.algo_name }}</span>
+
+        <span class="admin_toolbar_v13_pipe admin_toolbar_v13_desktop_only">|</span>
+        <span class="admin_toolbar_v13_desktop_only">
+            {{page_name}}
+        </span>
+
+    </div>
+</div>
+
+
+        <!-- RIGHT -->
+        <div class="admin_toolbar_v13_right">
+            <button id="admin_toolbar_v13_user_btn" class="admin_toolbar_v13_button">
+                <img src="/static/back_end/icons/user.png" alt="User">
+            </button>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+<!-- ===================== MOBILE BOTTOM FOOTER ===================== -->
+{% if request.path != url_for('admin_home') %}
+<div class="admin_toolbar_v13_mobile_footer">
+
+    <a class="admin_toolbar_v13_button" href="{{ url_for('admin_home') }}">
+        <img src="/static/back_end/icons/back_button.png" alt="Back">
+    </a>
+
+    <div class="admin_toolbar_v13_mobile_center">
+        {{page_name}}
+    </div>
+
+    <button id="admin_toolbar_v13_user_btn_mobile" class="admin_toolbar_v13_button">
+        <img src="/static/back_end/icons/user.png" alt="User">
+    </button>
+
+</div>
+{% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    /* ============================================================
+       UNIVERSAL STYLED POPUP
+       ============================================================ */
+    function styledSwal(options){
+        return Swal.fire({
+            background: "#ffffff",
+            width: 500,
+            padding: "28px 32px",
+            showCloseButton: true,
+            closeButtonHtml: "✕",
+            customClass: {
+                popup: "swal_pop_v3",
+                confirmButton: "swal_confirm_v3",
+                cancelButton: "swal_cancel_v3"
+            },
+            buttonsStyling: false,
+            ...options
+        });
+    }
+
+
+    /* ============================================================
+       USER INFO POPUP
+       ============================================================ */
+    function openUserPopup(){
+        styledSwal({
+            title: `
+                <div style="font-family:'Oswald'; 
+                            font-size:30px; 
+                            font-weight:800; 
+                            color:#3c92f2;
+                            margin-bottom:10px;">
+                    User Information
+                </div>
+            `,
+            html: `
+                <div style="font-family:'Poppins';
+                            font-size:16px;
+                            line-height:1.7;
+                            text-align:left;
+                            color:#0f172a;">
+                    <p><b>Name:</b> Deane Marks</p>
+                    <p><b>Email:</b> demo@example.com</p>
+                    <p><b>Access Level:</b> Viewer</p>
+                </div>
+            `,
+            showCancelButton: true,
+            confirmButtonText: "Logout",
+            cancelButtonText: "Close"
+        }).then(r=>{
+            if(r.isConfirmed){
+                window.location.href="/logout";
+            }
+        });
+    }
+
+
+    /* ============================================================
+       LOGO BUTTON → ABOUT BlackTieEvent.app POPUP
+       ============================================================ */
+    function openLogoPopup(){
+        styledSwal({
+            title: `
+                <div style="font-family:'Oswald';
+                            font-size:30px;
+                            font-weight:800;
+                            color:#3c92f2;
+                            margin-bottom:10px;">
+                    BlackTieEvent.app
+                </div>
+            `,
+            html: `
+                <div style="font-family:'Poppins';
+                            font-size:16px;
+                            line-height:1.7;
+                            text-align:left;
+                            color:#0f172a;">
+                    BlackTieEvent.app is a modern, QR-powered silent auction system that automates check-in,
+                    bidding, payments, winner notifications, and event analytics — all in real time.
+                </div>
+            `,
+            showCancelButton:true,
+            confirmButtonText:"Share Software",
+            cancelButtonText:"Close"
+        }).then(r=>{
+            if(r.isConfirmed){
+                navigator.clipboard.writeText("https://BlackTieEvent.app.app").then(()=>{
+
+                    styledSwal({
+                        icon:"success",
+                        title:`<div style="font-family:'Oswald';
+                                         font-size:26px;
+                                         font-weight:800;
+                                         color:#3c92f2;">
+                                   Link Copied!
+                               </div>`
+                    });
+
+                });
+            }
+        });
+    }
+
+
+    /* ============================================================
+       EVENT LISTENERS
+       ============================================================ */
+    document.getElementById("admin_toolbar_v13_user_btn")
+        ?.addEventListener("click", openUserPopup);
+
+    document.getElementById("admin_toolbar_v13_user_btn_mobile")
+        ?.addEventListener("click", openUserPopup);
+
+    document.getElementById("admin_toolbar_v13_logo_btn")
+        ?.addEventListener("click", openLogoPopup);
+
+
+});
+
+</script>
+
+
+<!--block admin_toolbar_modern_isolated_v13-->

@@ -1,0 +1,299 @@
+<!-- loading_page_v15 -->
+<html>
+<head>
+    <title>HoodAlgo</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+
+    <style>
+
+        /* ============================= */
+        /* BASE                          */
+        /* ============================= */
+
+        body {
+            margin: 0;
+            background: radial-gradient(circle at center, #05070a 0%, #000000 100%);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* ============================= */
+        /* CORE WRAPPER                  */
+        /* ============================= */
+
+        #core_wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -55%);
+            text-align: center;
+        }
+
+        /* ============================= */
+        /* LOGO                          */
+        /* ============================= */
+
+        #logo_block {
+            font-size: 185px;
+            font-weight: 1000;
+            letter-spacing: -3px;
+            margin-top: -50px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #hood_text {
+            color: #4ade80;
+        }
+
+        #algo_block {
+            display: flex;
+            align-items: center;
+            color: #e5e7eb;
+        }
+
+        /* ============================= */
+        /* GEAR (EMOJI CLEAN SPIN)       */
+        /* ============================= */
+
+        #gear_icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 0.85em;
+
+            margin-left: -2px;
+            margin-right: -4px;
+
+            transform-origin: 50% 50%;
+
+            animation: gear_spin 6s linear infinite;
+        }
+
+        @keyframes gear_spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ============================= */
+        /* DOT COM                       */
+        /* ============================= */
+
+        #dotcom_text {
+            font-size: 12px;
+
+            margin-left: 6px;
+
+            color: #e5e7eb;
+            opacity: 0.7;
+
+            letter-spacing: 1px;
+
+            align-self: flex-end;
+            transform: translateY(8px); /* 🔥 visual drop WITHOUT breaking spin */
+        }
+
+        /* ============================= */
+        /* STATUS                        */
+        /* ============================= */
+
+        #status_container {
+            margin-top: 20px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            gap: 14px;
+
+            animation: system_pulse 1.8s ease-in-out infinite;
+        }
+
+        #status_dot {
+            width: 17px;
+            height: 17px;
+
+            background: #4ade80;
+            border-radius: 50%;
+        }
+
+        #status_text {
+            font-size: 30px;
+            font-weight: 600;
+        }
+
+        @keyframes system_pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.75;
+            }
+            50% {
+                transform: scale(1.12);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 0.75;
+            }
+        }
+
+        /* ============================= */
+        /* FOOTER                        */
+        /* ============================= */
+
+        #footer_text {
+            position: fixed;
+            bottom: 22px;
+            left: 50%;
+            transform: translateX(-50%);
+
+            font-size: 16px;
+            letter-spacing: 1px;
+
+            display: flex;
+            align-items: center;
+            gap: 0px;
+        }
+
+        #footer_robinhood {
+            color: rgba(74, 222, 128, 0.65);
+        }
+
+        #footer_algo {
+            color: rgba(255,255,255,0.7);
+        }
+
+        #footer_copy {
+            font-size: 12px;
+            color: rgba(255,255,255,0.45);
+        }
+
+        #footer_status_extra {
+            margin-left: 10px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.35);
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- CORE -->
+    <div id="core_wrapper">
+
+        <!-- LOGO -->
+        <div id="logo_block">
+
+            <span id="hood_text">Hood</span>
+
+            <span id="algo_block">
+                Alg
+                <span id="gear_icon">⚙️</span>
+            </span>
+
+
+        </div>
+
+        <!-- STATUS -->
+        <div id="status_container">
+            <div id="status_dot"></div>
+            <div id="status_text">Welcome Initializing system</div>
+        </div>
+
+    </div>
+
+
+
+<!--block footer_bar_v2-->
+
+    <style>
+        #footer_bar {
+            position: fixed;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            font-size: 13px;
+            letter-spacing: 1px;
+
+            opacity: 0.9;
+        }
+
+        /* BRAND */
+        #footer_brand {
+            display: flex;
+            gap: 6px;
+        }
+
+        #footer_brand_green {
+            color: #4ade80;
+        }
+
+        #footer_brand_white {
+            color: rgba(255,255,255,0.75);
+        }
+
+        /* DOT DIVIDER */
+        .footer_dot {
+            width: 4px;
+            height: 4px;
+            background: rgba(255,255,255,0.25);
+            border-radius: 50%;
+        }
+
+        /* STATES */
+        .footer_state {
+            color: rgba(255,255,255,0.6);
+        }
+
+        .footer_state_active {
+            color: #4ade80;
+            animation: footer_pulse 1.6s infinite;
+        }
+
+        /* PULSE */
+        @keyframes footer_pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+    </style>
+
+    <div id="footer_bar">
+
+        <div id="footer_brand">
+            <span id="footer_brand_green">ROBINHOOD</span>
+            <span id="footer_brand_white">ALGORITHMIC</span>
+        </div>
+
+
+        <div class="footer_dot"></div>
+
+        <div class="footer_state">LIVE-MODE</div>
+
+        <div class="footer_dot"></div>
+
+        <div class="footer_state_active">RUNNING</div>
+
+        <div class="footer_dot"></div>
+
+        <div class="footer_state">v1.0</div>
+
+    </div>
+
+<!--block footer_bar_v2-->
+
+
+</body>
+</html>

@@ -1,0 +1,10 @@
+beautifulsoup4
+flask
+mysql-connector-python
+numpy
+pandas
+pillow-heif
+requests
+selenium
+stripe
+undetected-chromedriver

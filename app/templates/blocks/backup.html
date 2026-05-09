@@ -1,0 +1,297 @@
+<!--block system_control_v3-->
+
+<div id="system_control_wrapper_v3">
+
+    <!-- Trigger -->
+    <div class="dropdown_wrapper" id="system_control_button_v3">
+
+        <a id="open_system_modal_v3"
+           class="dropdown_trigger"
+           role="button"
+           style="cursor:pointer;">
+
+            <div id="system_control_icon_v3"
+                 class="app_icon system_icon_base_v3">
+
+                <i id="system_gear_v3"
+                   class="fa-solid fa-gear system_gear_v3"></i>
+
+            </div>
+
+            <div id="system_control_label_v3"
+                 class="app_label">
+                Loading ▾
+            </div>
+
+        </a>
+
+    </div>
+
+
+    <!-- Unified Modal -->
+    <div id="system_running_modal_v3" class="modal_overlay">
+
+        <div class="modal_container" style="max-width:480px;">
+
+            <div class="modal_header">
+                <div class="modal_title">
+                    Algorithm Status
+                </div>
+                <div class="modal_close"
+                     id="system_running_close_v3">
+                    &times;
+                </div>
+            </div>
+
+            <div class="modal_body"
+                 style="padding:32px; text-align:center;">
+
+                <div id="system_modal_status_text_v3"
+                     style="margin-bottom:24px;
+                            font-size:18px;
+                            font-weight:600;">
+                </div>
+
+                <div id="system_modal_buttons_v3">
+                    <!-- Buttons injected by JS -->
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<style>
+
+.system_icon_base_v3 {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition: all .3s ease;
+}
+
+.system_gear_v3 {
+    font-size:75px;
+}
+
+@media (max-width:768px){
+    .system_gear_v3 { font-size:49px; }
+}
+
+.spin_v3 {
+    animation: slow_spin_v3 6s linear infinite;
+}
+
+@keyframes slow_spin_v3 {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+.status_on_v3 {
+    background:#dcfce7;
+    color:#16a34a;
+}
+
+.status_test_v3 {
+    background:#fef3c7;
+    color:#f59e0b;
+}
+
+.status_off_v3 {
+    background:#fee2e2;
+    color:#dc2626;
+}
+
+</style>
+
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const trigger   = document.getElementById("open_system_modal_v3");
+    const overlay   = document.getElementById("system_running_modal_v3");
+    const closeBtn  = document.getElementById("system_running_close_v3");
+
+    const icon      = document.getElementById("system_control_icon_v3");
+    const gear      = document.getElementById("system_gear_v3");
+    const label     = document.getElementById("system_control_label_v3");
+
+    const modalText = document.getElementById("system_modal_status_text_v3");
+    const modalBtns = document.getElementById("system_modal_buttons_v3");
+
+
+
+    ////////////////////////////////////////////////////////////
+    // LOAD STATUS
+    ////////////////////////////////////////////////////////////
+
+    function loadStatus(){
+
+        fetch("/api/get_algo_status")
+            .then(res => res.text())
+            .then(status => {
+
+                status = status.trim().toLowerCase();
+
+                icon.classList.remove("status_on_v3",
+                                      "status_test_v3",
+                                      "status_off_v3");
+
+                gear.classList.remove("spin_v3");
+
+                modalBtns.innerHTML = "";
+
+                //////////////////////////////////////////////////////
+                // LIVE
+                //////////////////////////////////////////////////////
+                if (status === "on") {
+
+                    icon.classList.add("status_on_v3");
+                    gear.classList.add("spin_v3");
+                    label.innerText = "Running - Live ▾";
+
+                    modalText.innerText =
+                        "Algo is currently running (Live).";
+
+                    modalBtns.innerHTML = `
+                        <form method="POST" action="/algo_run_status">
+                            <input type="hidden" name="run_status" value="off">
+                            <button type="submit"
+                                    style="background:#dc2626;
+                                           color:#fff;
+                                           padding:14px 28px;
+                                           border:none;
+                                           border-radius:10px;
+                                           font-weight:700;
+                                           cursor:pointer;">
+                                <i class="fa-solid fa-power-off"></i>
+                                Stop Algo
+                            </button>
+                        </form>
+                    `;
+
+                }
+
+                //////////////////////////////////////////////////////
+                // TEST
+                //////////////////////////////////////////////////////
+                else if (status === "test") {
+
+                    icon.classList.add("status_test_v3");
+                    gear.classList.add("spin_v3");
+                    label.innerText = "Running - Test ▾";
+
+                    modalText.innerText =
+                        "Algo is running in Test Mode.";
+
+                    modalBtns.innerHTML = `
+                        <form method="POST" action="/algo_run_status">
+                            <input type="hidden" name="run_status" value="off">
+                            <button type="submit"
+                                    style="background:#dc2626;
+                                           color:#fff;
+                                           padding:14px 28px;
+                                           border:none;
+                                           border-radius:10px;
+                                           font-weight:700;
+                                           cursor:pointer;">
+                                <i class="fa-solid fa-power-off"></i>
+                                Stop Algo
+                            </button>
+                        </form>
+                    `;
+
+                }
+
+                //////////////////////////////////////////////////////
+                // OFF
+                //////////////////////////////////////////////////////
+                else {
+
+                    icon.classList.add("status_off_v3");
+                    label.innerText = "Stopped ▾";
+
+                    modalText.innerText =
+                        "Algo is currently stopped.";
+
+                    modalBtns.innerHTML = `
+                        <form method="POST" action="/algo_run_status"
+                              style="margin-bottom:12px;">
+                            <input type="hidden"
+                                   name="run_status"
+                                   value="on">
+                            <button type="submit"
+                                    style="background:#16a34a;
+                                           color:#fff;
+                                           padding:12px 24px;
+                                           border:none;
+                                           border-radius:8px;
+                                           font-weight:700;
+                                           cursor:pointer;">
+                                <i class="fa-solid fa-play"></i>
+                                Start Live
+                            </button>
+                        </form>
+
+                        <form method="POST"
+                              action="/algo_run_status">
+                            <input type="hidden"
+                                   name="run_status"
+                                   value="test">
+                            <button type="submit"
+                                    style="background:#f59e0b;
+                                           color:#fff;
+                                           padding:12px 24px;
+                                           border:none;
+                                           border-radius:8px;
+                                           font-weight:700;
+                                           cursor:pointer;">
+                                <i class="fa-solid fa-vial"></i>
+                                Start Test Mode
+                            </button>
+                        </form>
+                    `;
+
+                }
+
+            });
+
+    }
+
+
+    ////////////////////////////////////////////////////////////
+    // MODAL BEHAVIOR
+    ////////////////////////////////////////////////////////////
+
+    trigger.addEventListener("click", function(e){
+        e.preventDefault();
+        overlay.style.display = "flex";
+        document.body.style.overflow = "hidden";
+    });
+
+    closeBtn.addEventListener("click", function(){
+        overlay.style.display = "none";
+        document.body.style.overflow = "auto";
+    });
+
+    overlay.addEventListener("click", function(e){
+        if (e.target === overlay){
+            overlay.style.display = "none";
+            document.body.style.overflow = "auto";
+        }
+    });
+
+    loadStatus();
+
+});
+
+</script>
+
+<!--block system_control_v3-->

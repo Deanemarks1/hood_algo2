@@ -1,0 +1,2754 @@
+
+
+<!--block global_modal_styles_v7-->
+
+    <style>
+
+        :root {
+            --modal_dark: #111827;
+            --modal_surface: #f9fafb;
+        }
+
+        /* =========================
+           OVERLAY (Blur Glass)
+        ========================== */
+
+        .modal_overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(255,255,255,.65);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            opacity: 0;
+            transition: opacity .25s ease;
+        }
+
+        .modal_overlay[style*="flex"] {
+            opacity: 1;
+        }
+
+        /* =========================
+           CONTAINER
+        ========================== */
+
+        .modal_container {
+            width: 520px;
+            max-height: 80vh;
+            background: var(--modal_surface);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,.25);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform: scale(.95) translateY(10px);
+            opacity: 0;
+            transition: transform .25s ease, opacity .25s ease;
+        }
+
+        .modal_overlay[style*="flex"] .modal_container {
+            transform: scale(1) translateY(0px);
+            opacity: 1;
+        }
+
+        /* =========================
+           HEADER
+        ========================== */
+
+        .modal_header {
+            background: var(--modal_dark);
+            padding: 18px;
+            text-align: center;
+            position: relative;
+            flex-shrink: 0;
+            color: white;
+            font-family: Poppins, sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        .modal_close {
+            position: absolute;
+            right: 18px;
+            top: 16px;
+            font-size: 20px;
+            cursor: pointer;
+            opacity: .8;
+        }
+
+        .modal_close:hover {
+            opacity: 1;
+        }
+
+        /* =========================
+           BODY
+        ========================== */
+
+        .modal_body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px 30px;
+        }
+
+        /* =========================
+           FORM ROW (Reusable)
+        ========================== */
+
+        .modal_row {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 22px;
+        }
+
+        .modal_row label {
+            font-weight: 700;
+            margin-bottom: 4px;
+            font-family: Poppins, sans-serif;
+        }
+
+        .modal_note {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 8px;
+            line-height: 1.4;
+            margin-top: -8px;
+            margin-left: 5px;
+        }
+
+        .modal_row input,
+        .modal_row select {
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid #d1d5db;
+            font-family: Poppins, sans-serif;
+        }
+
+        /* =========================
+           FOOTER
+        ========================== */
+
+        .modal_footer {
+            padding: 18px;
+            border-top: 1px solid #e5e7eb;
+            background: var(--modal_surface);
+            text-align: center;
+        }
+
+        /* =========================
+           BUTTON
+        ========================== */
+
+        .modal_button {
+            width: 260px;
+            padding: 12px;
+            background: var(--modal_dark);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 16px;
+            font-family: Poppins, sans-serif;
+            cursor: pointer;
+            transition: opacity .15s ease;
+        }
+
+        .modal_button:hover {
+            opacity: .9;
+        }
+
+        /* =========================
+           MOBILE
+        ========================== */
+
+        @media (max-width:768px){
+
+            .modal_container {
+                width: 95%;
+                max-height: 85vh;
+            }
+
+            .modal_button {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+<!--block global_modal_styles_v7-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--block system_running_modal_v3-->
+
+<div id="system_running_modal" class="modal_overlay">
+
+    <div class="modal_container" style="max-width:480px;">
+
+        <div class="modal_header">
+            <div class="modal_title">
+                Algorithm Control
+            </div>
+            <div class="modal_close" id="system_modal_close">
+                &times;
+            </div>
+        </div>
+
+        <div class="modal_body" style="padding:32px; text-align:center;">
+
+            <div id="modal_status_text"
+                 style="margin-bottom:24px;
+                        font-size:18px;
+                        font-weight:600;">
+                Loading...
+            </div>
+
+            <div id="modal_action_buttons">
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const overlay  = document.getElementById("system_running_modal");
+    const closeBtn = document.getElementById("system_modal_close");
+    const trigger  = document.getElementById("open_system_running_modal");
+
+    const statusText = document.getElementById("modal_status_text");
+    const actionContainer = document.getElementById("modal_action_buttons");
+
+
+    ////////////////////////////////////////////////////////////
+    // LOAD STATUS (only for display + button rendering)
+    ////////////////////////////////////////////////////////////
+
+    function loadModalState(){
+
+        fetch("/api/get_algo_status")
+            .then(res => res.text())
+            .then(status => {
+
+                status = status.trim().toLowerCase();
+                actionContainer.innerHTML = "";
+
+                if (status === "on") {
+
+                    statusText.innerText = "Algo is running LIVE.";
+
+                    actionContainer.innerHTML = `
+                        <form method="POST" action="/algo_run_status">
+                            <input type="hidden" name="run_status" value="off">
+                            <button type="submit"
+                                    style="background:#dc2626;
+                                           color:#fff;
+                                           padding:14px 28px;
+                                           border:none;
+                                           border-radius:10px;
+                                           font-weight:700;
+                                           cursor:pointer;">
+                                <i class="fa-solid fa-power-off"></i>
+                                Stop Algo
+                            </button>
+                        </form>
+                    `;
+
+                }
+                else if (status === "test") {
+
+                    statusText.innerText = "Algo is running in TEST mode.";
+
+                    actionContainer.innerHTML = `
+                        <form method="POST" action="/algo_run_status">
+                            <input type="hidden" name="run_status" value="off">
+                            <button type="submit"
+                                    style="background:#dc2626;
+                                           color:#fff;
+                                           padding:14px 28px;
+                                           border:none;
+                                           border-radius:10px;
+                                           font-weight:700;
+                                           cursor:pointer;">
+                                <i class="fa-solid fa-power-off"></i>
+                                Stop Algo
+                            </button>
+                        </form>
+                    `;
+
+                }
+                else {
+
+                    statusText.innerText = "Algo is currently stopped.";
+
+                    actionContainer.innerHTML = `
+                        <form method="POST" action="/algo_run_status"
+                              style="margin-bottom:12px;">
+                            <input type="hidden" name="run_status" value="on">
+                            <button type="submit"
+                                    style="background:#16a34a;
+                                           color:#fff;
+                                           padding:12px 24px;
+                                           border:none;
+                                           border-radius:8px;
+                                           font-weight:700;
+                                           cursor:pointer;">
+                                <i class="fa-solid fa-play"></i>
+                                Start Live
+                            </button>
+                        </form>
+
+                        <form method="POST" action="/algo_run_status">
+                            <input type="hidden" name="run_status" value="test">
+                            <button type="submit"
+                                    style="background:#f59e0b;
+                                           color:#fff;
+                                           padding:12px 24px;
+                                           border:none;
+                                           border-radius:8px;
+                                           font-weight:700;
+                                           cursor:pointer;">
+                                <i class="fa-solid fa-vial"></i>
+                                Start Test
+                            </button>
+                        </form>
+                    `;
+                }
+
+            });
+
+    }
+
+
+    ////////////////////////////////////////////////////////////
+    // OPEN / CLOSE
+    ////////////////////////////////////////////////////////////
+
+    if (trigger){
+        trigger.addEventListener("click", function(e){
+            e.preventDefault();
+            overlay.style.display = "flex";
+            document.body.style.overflow = "hidden";
+            loadModalState();
+        });
+    }
+
+    closeBtn.addEventListener("click", function(){
+        overlay.style.display = "none";
+        document.body.style.overflow = "auto";
+    });
+
+    overlay.addEventListener("click", function(e){
+        if (e.target === overlay){
+            overlay.style.display = "none";
+            document.body.style.overflow = "auto";
+        }
+    });
+
+});
+
+</script>
+
+<!--block system_running_modal_v3-->
+
+
+
+<!--block system_stopped_modal_v4-->
+
+    <div id="system_stopped_overlay_v4" class="modal_overlay">
+
+        <div class="modal_container" style="max-width:520px;">
+
+            <div class="modal_header">
+                Algorithm Status
+                <div class="modal_close" id="system_stopped_close_v4">
+                    &times;
+                </div>
+            </div>
+
+            <div class="modal_body" style="text-align:center; padding:40px 32px;">
+
+                <div style="margin-bottom:24px;">
+                    <div style="
+                            width:90px;
+                            height:90px;
+                            margin:0 auto;
+                            background:#fee2e2;
+                            border-radius:50%;
+                            display:flex;
+                            align-items:center;
+                            justify-content:center;
+                        ">
+                        <i class="fa-solid fa-gear"
+                           style="font-size:52px; color:#dc2626;">
+                        </i>
+                    </div>
+                </div>
+
+                <div style="font-size:20px; font-weight:700; margin-bottom:8px;">
+                    {{ algo_name }}  is stopped
+                </div>
+
+                <div style="font-size:14px; color:#64748b; margin-bottom:36px;">
+                    Trading engine is currently inactive.
+                </div>
+
+                <form method="POST" action="/handle_algo_selection">
+                    <input type="hidden" name="algo_selection" value="on">
+
+                    <button type="submit" class="modal_button">
+                        <i class="fa-solid fa-play"></i>
+                        Start Algorithm
+                    </button>
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+<!--block system_stopped_modal_v4-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--block run_schedule_modal_v10-->
+
+        <style>
+
+            .schedule_option_row_v10 {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 20px;
+                font-weight: 600;
+            }
+
+            .custom_date_block_v10 {
+                margin-bottom: 40px;
+                text-align: center;
+            }
+
+            .custom_date_block_v10 label {
+                font-weight: 700;
+                margin-bottom: 14px;
+                display: block;
+            }
+
+            .date_headers_v10 {
+                display: flex;
+                justify-content: center;
+                gap: 40px;
+                font-size: 13px;
+                font-weight: 600;
+                margin-bottom: 6px;
+                opacity: .7;
+            }
+
+            .custom_date_picker_v10 {
+                display: flex;
+                justify-content: center;
+                gap: 16px;
+            }
+
+            .custom_date_picker_v10 select {
+                padding: 10px 14px;
+                border-radius: 12px;
+                border: 1px solid #d4d8db;
+                font-family: 'Poppins', sans-serif;
+                font-weight: 600;
+                cursor: pointer;
+                min-width: 90px;
+            }
+
+        </style>
+
+
+
+
+    <div id="run_schedule_overlay_v10" class="modal_overlay">
+
+        <div class="modal_container">
+
+            <div class="modal_header">
+                <div class="modal_title">Run Schedule</div>
+                <div id="run_schedule_close_v10" class="modal_close">✕</div>
+            </div>
+
+            <form method="POST"
+                  action="/handle_run_schedule"
+                  id="run_schedule_form_v10">
+
+                <div class="modal_body">
+
+                    <div class="schedule_option_row_v10">
+                        <input type="checkbox"
+                               name="run_forever"
+                               value="1"
+                               id="run_forever_checkbox_v10">
+                        <label for="run_forever_checkbox_v10">
+                            Run Forever
+                        </label>
+                    </div>
+
+                    <div class="schedule_option_row_v10">
+                        <input type="checkbox"
+                               name="run_selected_days"
+                               value="1"
+                               id="run_selected_days_checkbox_v10">
+                        <label for="run_selected_days_checkbox_v10">
+                            Run Selected Days
+                        </label>
+                    </div>
+
+                    <div id="selected_days_inputs_v10" style="display:none;">
+
+                        <!-- START DATE -->
+                        <div class="custom_date_block_v10">
+
+                            <label>Start Date</label>
+
+                            <div class="date_headers_v10">
+                                <div>Month</div>
+                                <div>Day</div>
+                                <div>Year</div>
+                            </div>
+
+                            <div class="custom_date_picker_v10">
+                                <select id="start_month_v10"></select>
+                                <select id="start_day_v10"></select>
+                                <select id="start_year_v10"></select>
+                            </div>
+
+                            <input type="hidden"
+                                   name="start_date"
+                                   id="start_date_hidden_v10">
+                        </div>
+
+                        <!-- END DATE -->
+                        <div class="custom_date_block_v10">
+
+                            <label>End Date</label>
+
+                            <div class="date_headers_v10">
+                                <div>Month</div>
+                                <div>Day</div>
+                                <div>Year</div>
+                            </div>
+
+                            <div class="custom_date_picker_v10">
+                                <select id="end_month_v10"></select>
+                                <select id="end_day_v10"></select>
+                                <select id="end_year_v10"></select>
+                            </div>
+
+                            <input type="hidden"
+                                   name="end_date"
+                                   id="end_date_hidden_v10">
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal_footer">
+                    <button type="submit" class="modal_button">
+                        Save Schedule
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", () => {
+
+            /* ================================
+               ELEMENT REFERENCES
+            ================================= */
+
+            const overlay   = document.getElementById("run_schedule_overlay_v10");
+            const openBtn   = document.getElementById("open_run_schedule_btn_v8");
+            const closeBtn  = document.getElementById("run_schedule_close_v10");
+
+            const foreverCheckbox  = document.getElementById("run_forever_checkbox_v10");
+            const selectedCheckbox = document.getElementById("run_selected_days_checkbox_v10");
+            const selectedInputs   = document.getElementById("selected_days_inputs_v10");
+
+            const startHidden = document.getElementById("start_date_hidden_v10");
+            const endHidden   = document.getElementById("end_date_hidden_v10");
+
+            const startMonth = document.getElementById("start_month_v10");
+            const startDay   = document.getElementById("start_day_v10");
+            const startYear  = document.getElementById("start_year_v10");
+
+            const endMonth = document.getElementById("end_month_v10");
+            const endDay   = document.getElementById("end_day_v10");
+            const endYear  = document.getElementById("end_year_v10");
+
+
+            /* ================================
+               LOAD SCHEDULE FROM API
+            ================================= */
+
+            function loadScheduleFromAPI() {
+
+                fetch("/api/get_run_schedule")
+                    .then(res => {
+                        if (!res.ok) throw new Error("Bad response");
+                        return res.json();
+                    })
+                    .then(data => {
+
+                        foreverCheckbox.checked  = Number(data.run_forever) === 1;
+                        selectedCheckbox.checked = Number(data.run_selected_days) === 1;
+
+                        selectedInputs.style.display =
+                            selectedCheckbox.checked ? "block" : "none";
+
+                        startHidden.value = data.start_date || "";
+                        endHidden.value   = data.end_date   || "";
+
+                        if (data.start_date) {
+                            const d = new Date(data.start_date);
+                            startMonth.value = d.getMonth() + 1;
+                            startDay.value   = d.getDate();
+                            startYear.value  = d.getFullYear();
+                        }
+
+                        if (data.end_date) {
+                            const d = new Date(data.end_date);
+                            endMonth.value = d.getMonth() + 1;
+                            endDay.value   = d.getDate();
+                            endYear.value  = d.getFullYear();
+                        }
+
+                    })
+                    .catch(err => console.log("Schedule API error:", err));
+            }
+
+
+            /* ================================
+               MODAL OPEN / CLOSE
+            ================================= */
+
+            if (overlay && openBtn) {
+
+                openBtn.addEventListener("click", e => {
+                    e.preventDefault();
+                    overlay.style.display = "flex";
+                    document.body.style.overflow = "hidden";
+                    loadScheduleFromAPI();
+                });
+
+                closeBtn.addEventListener("click", () => {
+                    overlay.style.display = "none";
+                    document.body.style.overflow = "auto";
+                });
+
+                overlay.addEventListener("click", e => {
+                    if (e.target === overlay) {
+                        overlay.style.display = "none";
+                        document.body.style.overflow = "auto";
+                    }
+                });
+
+            }
+
+
+            /* ================================
+               CHECKBOX LOGIC
+            ================================= */
+
+            foreverCheckbox.addEventListener("change", () => {
+
+                if (foreverCheckbox.checked) {
+                    selectedCheckbox.checked = false;
+                    selectedInputs.style.display = "none";
+                }
+
+            });
+
+            selectedCheckbox.addEventListener("change", () => {
+
+                if (selectedCheckbox.checked) {
+
+                    foreverCheckbox.checked = false;
+                    selectedInputs.style.display = "block";
+
+                    if (!startHidden.value) {
+                        const today = new Date();
+                        startMonth.value = today.getMonth() + 1;
+                        startDay.value   = today.getDate();
+                        startYear.value  = today.getFullYear();
+                    }
+
+                    if (!endHidden.value) {
+                        const tomorrow = new Date();
+                        tomorrow.setDate(tomorrow.getDate() + 1);
+                        endMonth.value = tomorrow.getMonth() + 1;
+                        endDay.value   = tomorrow.getDate();
+                        endYear.value  = tomorrow.getFullYear();
+                    }
+
+                } else {
+
+                    selectedInputs.style.display = "none";
+
+                }
+
+            });
+
+
+            /* ================================
+               POPULATE DROPDOWNS
+            ================================= */
+
+            function populateDate(monthSelect, daySelect, yearSelect) {
+
+                const today = new Date();
+                const currentYear = today.getFullYear();
+
+                for (let m = 1; m <= 12; m++) {
+                    const opt = document.createElement("option");
+                    opt.value = m;
+                    opt.textContent = m;
+                    monthSelect.appendChild(opt);
+                }
+
+                for (let d = 1; d <= 31; d++) {
+                    const opt = document.createElement("option");
+                    opt.value = d;
+                    opt.textContent = d;
+                    daySelect.appendChild(opt);
+                }
+
+                for (let y = currentYear; y <= currentYear + 3; y++) {
+                    const opt = document.createElement("option");
+                    opt.value = y;
+                    opt.textContent = y;
+                    yearSelect.appendChild(opt);
+                }
+
+            }
+
+            populateDate(startMonth, startDay, startYear);
+            populateDate(endMonth, endDay, endYear);
+
+
+            /* ================================
+               SUBMIT VALIDATION
+            ================================= */
+
+            document.getElementById("run_schedule_form_v10")
+                .addEventListener("submit", function(e){
+
+                    /* If Run Forever selected, skip date validation */
+                    if (foreverCheckbox.checked) {
+
+                        startHidden.value = "";
+                        endHidden.value   = "";
+                        return;
+                    }
+
+                    const start = new Date(
+                        startYear.value,
+                        startMonth.value - 1,
+                        startDay.value
+                    );
+
+                    const end = new Date(
+                        endYear.value,
+                        endMonth.value - 1,
+                        endDay.value
+                    );
+
+                    const today = new Date();
+                    today.setHours(0,0,0,0);
+
+                    if (start < today || end < today) {
+
+                        e.preventDefault();
+
+                        Swal.fire({
+                            icon: "error",
+                            title: "Invalid Date",
+                            text: "Dates cannot be in the past.",
+                            confirmButtonColor: "#475569"
+                        });
+
+                        return;
+                    }
+
+                    if (end < start) {
+
+                        e.preventDefault();
+
+                        Swal.fire({
+                            icon: "error",
+                            title: "Invalid Date Range",
+                            text: "End date must be after start date.",
+                            confirmButtonColor: "#475569"
+                        });
+
+                        return;
+                    }
+
+                    startHidden.value = start.toISOString().split("T")[0];
+                    endHidden.value   = end.toISOString().split("T")[0];
+
+                });
+
+        });
+
+    </script>
+<!--block run_schedule_modal_v10-->
+
+
+
+
+
+
+
+
+
+
+
+
+<!--block trade_window_modal_v9-->
+    <style>
+
+        .custom_time_block_v9 {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .time_label_row_v9 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            margin-bottom: 14px;
+            font-size: 18px;
+        }
+
+        .custom_time_picker_v9 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .time_select_v9 {
+            padding: 12px 18px;
+            border-radius: 14px;
+            border: 1px solid #d4d8db;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 16px;
+            background: white;
+            cursor: pointer;
+            min-width: 80px;
+        }
+
+        .time_select_v9:focus {
+            outline: none;
+            border-color: var(--modal_accent);
+            box-shadow: 0 0 0 3px rgba(95,168,116,.15);
+        }
+
+        .colon_v9 {
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+    </style>
+    <div id="trade_window_overlay_v9" class="modal_overlay">
+
+        <div class="modal_container">
+
+            <div class="modal_header">
+                <div class="modal_title">Trade Window</div>
+                <div id="trade_window_close_v9" class="modal_close">✕</div>
+            </div>
+
+            <form method="POST"
+                  action="/handle_trade_window"
+                  id="trade_window_form_v9">
+
+                <div class="modal_body">
+
+                    <!-- Trading Start -->
+                    <div class="custom_time_block_v9">
+
+                        <div class="time_label_row_v9">
+                            <i class="fa-regular fa-clock"></i>
+                            <label>Trading Start</label>
+                        </div>
+
+                        <div class="custom_time_picker_v9">
+                            <select id="start_hour_v9" class="time_select_v9"></select>
+                            <span class="colon_v9">:</span>
+                            <select id="start_minute_v9" class="time_select_v9"></select>
+                            <select id="start_period_v9" class="time_select_v9">
+                                <option value="AM">AM</option>
+                                <option value="PM">PM</option>
+                            </select>
+                        </div>
+
+                        <input type="hidden"
+                               name="trade_start_time"
+                               id="trade_start_hidden_v9">
+
+                    </div>
+
+                    <!-- Trading End -->
+                    <div class="custom_time_block_v9">
+
+                        <div class="time_label_row_v9">
+                            <i class="fa-regular fa-clock"></i>
+                            <label>Trading End</label>
+                        </div>
+
+                        <div class="custom_time_picker_v9">
+                            <select id="end_hour_v9" class="time_select_v9"></select>
+                            <span class="colon_v9">:</span>
+                            <select id="end_minute_v9" class="time_select_v9"></select>
+                            <select id="end_period_v9" class="time_select_v9">
+                                <option value="AM">AM</option>
+                                <option value="PM">PM</option>
+                            </select>
+                        </div>
+
+                        <input type="hidden"
+                               name="trade_end_time"
+                               id="trade_end_hidden_v9">
+
+                    </div>
+
+                </div>
+
+                <div class="modal_footer">
+                    <button type="submit" class="modal_button">
+                        Save Trade Window
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function() {
+
+            const overlay  = document.getElementById("trade_window_overlay_v9");
+            const openBtn  = document.getElementById("open_trade_window_btn_v6");
+            const closeBtn = document.getElementById("trade_window_close_v9");
+
+            const startHidden = document.getElementById("trade_start_hidden_v9");
+            const endHidden   = document.getElementById("trade_end_hidden_v9");
+
+            function populateDropdown(hourId, minuteId) {
+
+                const hourSelect   = document.getElementById(hourId);
+                const minuteSelect = document.getElementById(minuteId);
+
+                for (let i = 1; i <= 12; i++) {
+                    const option = document.createElement("option");
+                    option.value = i.toString().padStart(2, "0");
+                    option.textContent = i.toString().padStart(2, "0");
+                    hourSelect.appendChild(option);
+                }
+
+                for (let m = 0; m < 60; m++) {
+                    const option = document.createElement("option");
+                    option.value = m.toString().padStart(2, "0");
+                    option.textContent = m.toString().padStart(2, "0");
+                    minuteSelect.appendChild(option);
+                }
+            }
+
+            populateDropdown("start_hour_v9", "start_minute_v9");
+            populateDropdown("end_hour_v9", "end_minute_v9");
+
+            function preloadTime(timeStr, hourId, minuteId, periodId) {
+
+                if (!timeStr) return;
+
+                const [h24, minute] = timeStr.split(":");
+                let hour = parseInt(h24);
+                let period = hour >= 12 ? "PM" : "AM";
+
+                hour = hour % 12;
+                if (hour === 0) hour = 12;
+
+                document.getElementById(hourId).value = hour.toString().padStart(2,"0");
+                document.getElementById(minuteId).value = minute;
+                document.getElementById(periodId).value = period;
+            }
+
+            function loadTradeWindow() {
+
+                fetch("/api/get_trade_window")
+                    .then(res => res.json())
+                    .then(data => {
+
+                        preloadTime(data.start_time,
+                                    "start_hour_v9",
+                                    "start_minute_v9",
+                                    "start_period_v9");
+
+                        preloadTime(data.end_time,
+                                    "end_hour_v9",
+                                    "end_minute_v9",
+                                    "end_period_v9");
+                    });
+            }
+
+            if (overlay && openBtn) {
+
+                openBtn.addEventListener("click", function(e){
+                    e.preventDefault();
+                    overlay.style.display = "flex";
+                    document.body.style.overflow = "hidden";
+                    loadTradeWindow();
+                });
+
+                function closeModal(){
+                    overlay.style.display = "none";
+                    document.body.style.overflow = "auto";
+                }
+
+                closeBtn.addEventListener("click", closeModal);
+                overlay.addEventListener("click", function(e){
+                    if (e.target === overlay) closeModal();
+                });
+            }
+
+            function to24(hour, minute, period) {
+                let h = parseInt(hour);
+                if (period === "PM" && h !== 12) h += 12;
+                if (period === "AM" && h === 12) h = 0;
+                return h.toString().padStart(2,"0") + ":" + minute;
+            }
+
+            document.getElementById("trade_window_form_v9")
+                .addEventListener("submit", function(e){
+
+                    const start24 = to24(
+                        document.getElementById("start_hour_v9").value,
+                        document.getElementById("start_minute_v9").value,
+                        document.getElementById("start_period_v9").value
+                    );
+
+                    const end24 = to24(
+                        document.getElementById("end_hour_v9").value,
+                        document.getElementById("end_minute_v9").value,
+                        document.getElementById("end_period_v9").value
+                    );
+
+                    startHidden.value = start24;
+                    endHidden.value   = end24;
+
+                    if (end24 <= start24) {
+
+                        e.preventDefault();
+
+                        Swal.fire({
+                            icon: "error",
+                            title: "Invalid Time Range",
+                            text: "End time must be later than start time.",
+                            confirmButtonColor: "#475569"
+                        });
+                    }
+
+                });
+
+        });
+
+    </script>
+<!--block trade_window_modal_v9-->
+
+
+
+
+
+
+
+
+
+
+
+<!--block scraper_inputs_modal_v6-->
+
+    <div id="scraper_inputs_overlay_v6" class="modal_overlay">
+
+        <div class="modal_container">
+
+            <div class="modal_header">
+                <div class="modal_title">
+                    Scraper Inputs
+                </div>
+                <div class="modal_close" id="scraper_inputs_close_v6">
+                    &times;
+                </div>
+            </div>
+
+            <form method="POST"
+                  action="/handle_scraper_inputs"
+                  id="scraper_inputs_form_v6">
+
+                <div class="modal_body">
+
+                    <div class="scraper_checkbox_row_v6">
+                        <input type="checkbox"
+                               name="scraper_stocktwits"
+                               value="1"
+                               id="scraper_stocktwits_v6">
+                        <label for="scraper_stocktwits_v6">Stocktwits</label>
+                    </div>
+
+                    <div class="scraper_checkbox_row_v6">
+                        <input type="checkbox"
+                               name="scraper_wsj"
+                               value="1"
+                               id="scraper_wsj_v6">
+                        <label for="scraper_wsj_v6">WSJ</label>
+                    </div>
+
+                    <div class="scraper_checkbox_row_v6">
+                        <input type="checkbox"
+                               name="scraper_tradingview"
+                               value="1"
+                               id="scraper_tradingview_v6">
+                        <label for="scraper_tradingview_v6">TradingView</label>
+                    </div>
+
+                    <div class="scraper_checkbox_row_v6">
+                        <input type="checkbox"
+                               name="scraper_benzinga"
+                               value="1"
+                               id="scraper_benzinga_v6">
+                        <label for="scraper_benzinga_v6">Benzinga</label>
+                    </div>
+
+                    <div class="scraper_checkbox_row_v6">
+                        <input type="checkbox"
+                               name="scraper_yahoo"
+                               value="1"
+                               id="scraper_yahoo_v6">
+                        <label for="scraper_yahoo_v6">Yahoo Finance</label>
+                    </div>
+
+                    <div class="scraper_checkbox_row_v6">
+                        <input type="checkbox"
+                               name="scraper_etf_universe"
+                               value="1"
+                               id="scraper_etf_universe_v6">
+                        <label for="scraper_etf_universe_v6">ETF Universe</label>
+                    </div>
+
+                </div>
+
+                <div class="modal_footer">
+                    <button type="submit" class="modal_button">
+                        Save Scraper Inputs
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <style>
+        .scraper_checkbox_row_v6 {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            font-size: 16px;
+        }
+
+        .scraper_checkbox_row_v6 input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .scraper_checkbox_row_v6 label {
+            cursor: pointer;
+            font-weight: 600;
+        }
+    </style>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", () => {
+
+            const overlay  = document.getElementById("scraper_inputs_overlay_v6");
+            const openBtn  = document.getElementById("open_scraper_inputs_btn_v6");
+            const closeBtn = document.getElementById("scraper_inputs_close_v6");
+
+            const checkboxes = {
+                scraper_stocktwits:   document.getElementById("scraper_stocktwits_v6"),
+                scraper_wsj:          document.getElementById("scraper_wsj_v6"),
+                scraper_tradingview:  document.getElementById("scraper_tradingview_v6"),
+                scraper_benzinga:     document.getElementById("scraper_benzinga_v6"),
+                scraper_yahoo:        document.getElementById("scraper_yahoo_v6"),
+                scraper_etf_universe: document.getElementById("scraper_etf_universe_v6")
+            };
+
+            function loadScraperInputs() {
+
+                fetch("/api/get_scraper_inputs")
+                    .then(res => {
+                        if (!res.ok) throw new Error("Bad response");
+                        return res.json();
+                    })
+                    .then(data => {
+
+                        Object.keys(checkboxes).forEach(key => {
+
+                            if (checkboxes[key]) {
+                                checkboxes[key].checked = (data[key] === 1);
+                            }
+
+                        });
+
+                    })
+                    .catch(err => {
+                        console.log("Scraper API error:", err);
+                    });
+            }
+
+            openBtn.addEventListener("click", e => {
+                e.preventDefault();
+                overlay.style.display = "flex";
+                document.body.style.overflow = "hidden";
+                loadScraperInputs();   // 🔥 load when modal opens
+            });
+
+            closeBtn.addEventListener("click", () => {
+                overlay.style.display = "none";
+                document.body.style.overflow = "auto";
+            });
+
+            overlay.addEventListener("click", e => {
+                if (e.target === overlay) {
+                    overlay.style.display = "none";
+                    document.body.style.overflow = "auto";
+                }
+            });
+
+        });
+
+    </script>
+<!--block scraper_inputs_modal_v6-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--block stock_filters-->
+
+    <div id="filters_overlay" class="modal_overlay">
+
+        <div class="modal_container">
+
+            <div class="modal_header">
+                <div class="modal_title">STOCK FILTERS</div>
+                <div id="filters_close" class="modal_close">✕</div>
+            </div>
+
+            <form method="POST" action="/handle_fundamental_filters">
+
+                <div class="modal_body">
+
+                    <div style="margin-bottom:32px;">
+                        <label style="display:block;font-weight:700;margin-bottom:10px;">
+                            Minimum Market Cap
+                        </label>
+                        <input type="number"
+                               name="market_cap_min"
+                               id="market_cap_input"
+                               style="width:100%;padding:14px 16px;border-radius:12px;border:1px solid #d4d8db;font-size:15px;">
+                        <div id="market_cap_hint"
+                             style="font-size:12px;color:#6b7280;margin-top:8px;">
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom:32px;">
+                        <label style="display:block;font-weight:700;margin-bottom:10px;">
+                            Minimum Volume
+                        </label>
+                        <input type="number"
+                               name="volume_min"
+                               id="volume_input"
+                               style="width:100%;padding:14px 16px;border-radius:12px;border:1px solid #d4d8db;font-size:15px;">
+                        <div id="volume_hint"
+                             style="font-size:12px;color:#6b7280;margin-top:8px;">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal_footer">
+                    <button type="submit" class="modal_button">
+                        Apply Filters
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <script>
+    function formatLargeNumber(value) {
+        if (!value) return "";
+        const num = parseFloat(value);
+        if (num >= 1_000_000_000_000) return (num/1_000_000_000_000).toFixed(2) + "T";
+        if (num >= 1_000_000_000) return (num/1_000_000_000).toFixed(2) + "B";
+        if (num >= 1_000_000) return (num/1_000_000).toFixed(2) + "M";
+        if (num >= 1_000) return (num/1_000).toFixed(2) + "K";
+        return num;
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const overlay = document.getElementById("filters_overlay");
+        const openBtn = document.getElementById("open_fundamental_filters_btn_v2");
+        const closeBtn = document.getElementById("filters_close");
+
+        function openModal() {
+            overlay.style.display = "flex";
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeModal() {
+            overlay.style.display = "none";
+            document.body.style.overflow = "auto";
+        }
+
+        if (openBtn) {
+            openBtn.addEventListener("click", function (e) {
+                e.preventDefault();
+                openModal();
+            });
+        }
+
+        closeBtn.addEventListener("click", closeModal);
+
+        overlay.addEventListener("click", function (e) {
+            if (e.target === overlay) closeModal();
+        });
+
+        const marketCapInput = document.getElementById("market_cap_input");
+        const marketCapHint = document.getElementById("market_cap_hint");
+
+        const volumeInput = document.getElementById("volume_input");
+        const volumeHint = document.getElementById("volume_hint");
+
+        marketCapInput.addEventListener("input", function() {
+            marketCapHint.textContent = formatLargeNumber(this.value);
+        });
+
+        volumeInput.addEventListener("input", function() {
+            volumeHint.textContent = formatLargeNumber(this.value);
+        });
+
+    });
+    </script>
+<!--block stock_filters-->
+
+
+
+
+
+
+
+
+<!--block model_weights_modal-->
+
+
+    <style>
+        
+
+        /* THUMB — SOLID FIX */
+        .weight_group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            opacity: 1;
+
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+
+            background: var(--modal_accent);
+            border: 4px solid #242424;     /* white stroke */
+            cursor: pointer;
+            background: #242424 !important;
+
+            margin-top: -8px;
+
+            box-shadow: 0 6px 16px rgba(0,0,0,.25);
+            transition: transform .1s ease;
+        }
+
+        .weight_group input[type="range"]:active::-webkit-slider-thumb {
+            transform: scale(1.1);
+        }
+
+        /* Firefox */
+        .weight_group input[type="range"]::-moz-range-thumb {
+            opacity: 1;
+
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+
+            background: var(--modal_accent);
+            border: 4px solid #ffffff;
+            cursor: pointer;
+
+            box-shadow: 0 6px 16px rgba(0,0,0,.25);
+        }
+
+    </style>
+
+
+
+
+    <div id="model_weights_overlay" class="modal_overlay">
+
+        <div class="modal_container">
+
+            <div class="modal_header">
+                <div class="modal_title">Model Weights</div>
+                <div id="model_weights_close" class="modal_close">✕</div>
+            </div>
+
+            <form method="POST" action="/handle_model_weights">
+
+                <div class="modal_body">
+
+                    <!-- Shared Row Template -->
+                    <div class="weight_row">
+                        <label>News Weight</label>
+                        <div class="weight_group">
+                            <input type="range" min="0" max="100" value="25" id="weight_news_slider">
+                            <input type="number" min="0" max="100" value="25" name="weight_news" id="weight_news_number">
+                        </div>
+                    </div>
+
+                    <div class="weight_row">
+                        <label>Fundamental Weight</label>
+                        <div class="weight_group">
+                            <input type="range" min="0" max="100" value="25" id="weight_fund_slider">
+                            <input type="number" min="0" max="100" value="25" name="weight_fundamental" id="weight_fund_number">
+                        </div>
+                    </div>
+
+                    <div class="weight_row">
+                        <label>Volume Weight</label>
+                        <div class="weight_group">
+                            <input type="range" min="0" max="100" value="25" id="weight_vol_slider">
+                            <input type="number" min="0" max="100" value="25" name="weight_volume" id="weight_vol_number">
+                        </div>
+                    </div>
+
+                    <div class="weight_row">
+                        <label>Momentum Weight</label>
+                        <div class="weight_group">
+                            <input type="range" min="0" max="100" value="25" id="weight_mom_slider">
+                            <input type="number" min="0" max="100" value="25" name="weight_momentum" id="weight_mom_number">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal_footer">
+                    <button type="submit" class="modal_button">
+                        Save Weights
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <style>
+    .weight_row {
+        margin-bottom: 36px;
+    }
+
+    .weight_row label {
+        display:block;
+        font-weight:700;
+        margin-bottom:12px;
+    }
+
+    .weight_group {
+        display:flex;
+        align-items:center;
+        gap:18px;
+    }
+
+    .weight_group input[type="number"] {
+        width:90px;
+        padding:10px;
+        border-radius:10px;
+        border:1px solid #d4d8db;
+        text-align:center;
+        font-weight:700;
+    }
+
+    /* SLIDER BASE */
+    .weight_group input[type="range"] {
+        flex:1;
+        appearance:none;
+        height:6px;
+        border-radius:6px;
+        background:#d4d8db;
+        outline:none;
+    }
+
+    /* TRACK FILL (Chrome) */
+    .weight_group input[type="range"]::-webkit-slider-runnable-track {
+        height:6px;
+        border-radius:6px;
+        background:linear-gradient(
+            to right,
+            var(--modal_accent) 0%,
+            var(--modal_accent) var(--value,25%),
+            #d4d8db var(--value,25%),
+            #d4d8db 100%
+        );
+    }
+
+    /* THUMB */
+    .weight_group input[type="range"]::-webkit-slider-thumb {
+        appearance:none;
+        width:20px;
+        height:20px;
+        border-radius:50%;
+        background:var(--modal_accent);
+        cursor:pointer;
+        margin-top:-7px;
+        box-shadow:0 4px 10px rgba(0,0,0,.15);
+        transition:transform .1s ease;
+    }
+
+    .weight_group input[type="range"]:active::-webkit-slider-thumb {
+        transform:scale(1.1);
+    }
+
+    /* Firefox */
+    .weight_group input[type="range"]::-moz-range-thumb {
+        width:20px;
+        height:20px;
+        border-radius:50%;
+        background:var(--modal_accent);
+        border:none;
+        cursor:pointer;
+    }
+    </style>
+
+    <script>
+    (function(){
+
+        const overlay = document.getElementById("model_weights_overlay");
+        const openBtn = document.getElementById("open_model_weights_btn_v4");
+        const closeBtn = document.getElementById("model_weights_close");
+
+        if (!overlay || !openBtn) return;
+
+        openBtn.addEventListener("click", function(e){
+            e.preventDefault();
+            overlay.style.display = "flex";
+            document.body.style.overflow = "hidden";
+        });
+
+        function closeModal(){
+            overlay.style.display = "none";
+            document.body.style.overflow = "auto";
+        }
+
+        closeBtn.addEventListener("click", closeModal);
+        overlay.addEventListener("click", function(e){
+            if (e.target === overlay) closeModal();
+        });
+
+        document.addEventListener("keydown", function(e){
+            if (e.key === "Escape") closeModal();
+        });
+
+        /* ---------- FIXED SYNC LOGIC ---------- */
+
+        function clamp(val){
+            val = parseInt(val);
+            if (isNaN(val)) val = 0;
+            if (val < 0) val = 0;
+            if (val > 100) val = 100;
+            return val;
+        }
+
+        function bindPair(sliderId, numberId){
+
+            const slider = document.getElementById(sliderId);
+            const number = document.getElementById(numberId);
+
+            if (!slider || !number) return;
+
+            function updateSliderFill(){
+                const percent = (slider.value / 100) * 100;
+                slider.style.setProperty('--value', percent + '%');
+            }
+
+            slider.addEventListener("input", function(){
+                number.value = slider.value;
+                updateSliderFill();
+            });
+
+            number.addEventListener("input", function(){
+                const value = clamp(number.value);
+                number.value = value;
+                slider.value = value;
+                updateSliderFill();
+            });
+
+            updateSliderFill();
+        }
+
+        bindPair("weight_news_slider","weight_news_number");
+        bindPair("weight_fund_slider","weight_fund_number");
+        bindPair("weight_vol_slider","weight_vol_number");
+        bindPair("weight_mom_slider","weight_mom_number");
+
+    })();
+    </script>
+<!--block model_weights_modal-->
+
+
+
+
+
+
+
+
+
+<!--block trade_rules_modal_v4-->
+
+    <div id="trade_rules_overlay" class="modal_overlay">
+
+        <div class="modal_container">
+
+            <div class="modal_header">
+                <div class="modal_title">Trade Rules</div>
+                <div id="trade_rules_close" class="modal_close">✕</div>
+            </div>
+
+            <form method="POST" action="/handle_trade_rules">
+
+                <div class="modal_body">
+
+                    <!-- Duplicate these to test scroll -->
+
+                    <div class="trade_row">
+                        <label># of Stocks to hold</label>
+                        <input type="number">
+                    </div>
+
+
+
+                    <div class="trade_row">
+                        <label>Take Profit (%)</label>
+                        <div class="modal_note">*Adds to dont_buy_list for 1 day</div>
+                        <input type="number">
+                    </div>
+
+                    <div class="trade_row">
+                        <label>Stop Loss (%)</label>
+                        <div class="modal_note">*Adds to dont_buy_list for 1 day?</div>
+                        <input type="number">
+                    </div>
+
+
+
+                    <div class="trade_row">
+                        <label>Portfolio Exposure (%)</label>
+                        <div class="modal_note">*Adds to dont_buy_list for 1 day</div>
+                        <input type="number">
+                    </div>
+
+
+
+
+
+
+
+                    <!-- Add 10 more and it will scroll perfectly -->
+
+                </div>
+
+                <div class="modal_footer">
+                    <button type="submit" class="modal_button">
+                        Save Trade Rules
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <style>
+    .trade_row {
+        margin-bottom: 32px;
+    }
+
+    .trade_row label {
+        display:block;
+        font-weight:700;
+        margin-bottom:10px;
+    }
+
+    .trade_row input {
+        width:100%;
+        padding:14px;
+        border-radius:12px;
+        border:1px solid #d4d8db;
+    }
+    </style>
+
+    <script>
+    (function(){
+
+        const overlay = document.getElementById("trade_rules_overlay");
+        const openBtn = document.getElementById("open_trade_rules_btn_v4");
+        const closeBtn = document.getElementById("trade_rules_close");
+
+        if (!overlay || !openBtn) return;
+
+        openBtn.addEventListener("click", function(e){
+            e.preventDefault();
+            overlay.style.display = "flex";
+            document.body.style.overflow = "hidden";
+        });
+
+        function closeModal(){
+            overlay.style.display = "none";
+            document.body.style.overflow = "auto";
+        }
+
+        closeBtn.addEventListener("click", closeModal);
+        overlay.addEventListener("click", function(e){
+            if (e.target === overlay) closeModal();
+        });
+
+    })();
+    </script>
+<!--block trade_rules_modal_v4-->
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- rebalance_logic_modal_v2-->
+
+    <div id="rebalance_logic_overlay_v2" class="modal_overlay">
+
+        <div class="modal_container">
+
+            <div class="modal_header">
+                <div class="modal_title">
+                    Reposition Logic
+                </div>
+                <div class="modal_close" id="rebalance_logic_close_v2">
+                    &times;
+                </div>
+            </div>
+
+            <form method="POST" action="/handle_rebalance_logic">
+
+                <div class="modal_body rebalance_options_v2">
+
+                    <!-- Frequency -->
+                    <div class="rebalance_field_v2">
+                        <label>Rebalance Frequency</label>
+                        <div class="rebalance_inline_v2">
+                            <input type="number"
+                                   name="frequency_value"
+                                   min="1"
+                                   placeholder="5">
+
+                            <select name="frequency_unit">
+                                <option value="minutes">Minutes</option>
+                                <option value="hours">Hours</option>
+                                <option value="days">Days</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Daily Schedule -->
+                    <div class="rebalance_field_v2">
+                        <label>Daily Run Time</label>
+                        <input type="time"
+                               name="schedule_time">
+                    </div>
+
+                    <!-- Threshold -->
+                    <div class="rebalance_field_v2">
+                        <label>Threshold Trigger (%)</label>
+                        <input type="number"
+                               step="0.1"
+                               name="threshold_percent"
+                               placeholder="2.5">
+                    </div>
+
+                    <!-- Min Hold -->
+                    <div class="rebalance_field_v2">
+                        <label>Minimum Hold Time (hours)</label>
+                        <input type="number"
+                               name="min_hold_hours"
+                               min="0"
+                               placeholder="24">
+                    </div>
+
+                    <!-- Manual Toggle -->
+                    <div class="rebalance_checkbox_row_v2">
+                        <input type="checkbox"
+                               name="manual_rebalance"
+                               id="manual_rebalance_v2">
+                        <label for="manual_rebalance_v2">
+                            Allow Manual Rebalance
+                        </label>
+                    </div>
+
+                </div>
+
+                <div class="modal_footer">
+                    <button type="submit" class="modal_button">
+                        Save Reposition Settings
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <style>
+        .rebalance_options_v2 {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .rebalance_field_v2 {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-weight: 600;
+        }
+
+        .rebalance_field_v2 input,
+        .rebalance_field_v2 select {
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid #d1d5db;
+            font-size: 14px;
+        }
+
+        .rebalance_inline_v2 {
+            display: flex;
+            gap: 10px;
+        }
+
+        .rebalance_inline_v2 input {
+            flex: 1;
+        }
+
+        .rebalance_inline_v2 select {
+            width: 130px;
+        }
+
+        .rebalance_checkbox_row_v2 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+    </style>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+        const overlay  = document.getElementById("rebalance_logic_overlay_v2");
+        const openBtn  = document.getElementById("open_rebalance_logic_btn_v2");
+        const closeBtn = document.getElementById("rebalance_logic_close_v2");
+
+        if (openBtn) {
+            openBtn.addEventListener("click", () => {
+                overlay.style.display = "flex";
+                document.body.style.overflow = "hidden";
+            });
+        }
+
+        closeBtn.addEventListener("click", () => {
+            overlay.style.display = "none";
+            document.body.style.overflow = "auto";
+        });
+
+        overlay.addEventListener("click", e => {
+            if (e.target === overlay) {
+                overlay.style.display = "none";
+                document.body.style.overflow = "auto";
+            }
+        });
+
+    });
+    </script>
+<!-- rebalance_logic_modal_v2-->
+
+
+
+
+
+
+
+
+
+
+<!-- trade_history_modal_v4-->
+
+    <div id="trade_history_overlay_v1" class="modal_overlay">
+
+        <div class="modal_container">
+
+            <div class="modal_header">
+                <div class="modal_title">
+                    Trade History
+                </div>
+                <div class="modal_close" id="trade_history_close_v1">
+                    &times;
+                </div>
+            </div>
+
+            <div class="modal_body"
+                 id="trade_history_content_v1"
+                 style="max-height:500px; overflow-y:auto; padding:0;">
+
+                <div style="padding:20px;">
+                    Loading trade history...
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+        const overlay  = document.getElementById("trade_history_overlay_v1");
+        const openBtn  = document.getElementById("open_trade_history_btn_v1");
+        const closeBtn = document.getElementById("trade_history_close_v1");
+        const content  = document.getElementById("trade_history_content_v1");
+
+        if (openBtn) {
+            openBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+
+                overlay.style.display = "flex";
+                document.body.style.overflow = "hidden";
+
+                content.innerHTML = `
+                    <div style="padding:20px;">
+                        Loading trade history...
+                    </div>
+                `;
+
+                fetch("/api/trade_history")
+                .then(res => res.json())
+                .then(data => {
+
+                    if (!data.success || !data.trades.length) {
+                        content.innerHTML = `
+                            <div style="padding:20px;">
+                                No trades found.
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    let table = `
+                        <table style="width:100%; border-collapse:collapse; font-size:14px;">
+                            <thead>
+                                <tr>
+                                    <th style="
+                                        position: sticky;
+                                        top: 0;
+                                        background: #000000;
+                                        color: #ffffff;
+                                        padding:16px 12px;
+                                        font-size:16px;
+                                        font-weight:800;
+                                        text-align:left;
+                                        z-index:5;
+                                    ">Date</th>
+
+                                    <th style="
+                                        position: sticky;
+                                        top: 0;
+                                        background: #000000;
+                                        color: #ffffff;
+                                        padding:16px 12px;
+                                        font-size:16px;
+                                        font-weight:800;
+                                        text-align:left;
+                                        z-index:5;
+                                    ">Ticker</th>
+
+                                    <th style="
+                                        position: sticky;
+                                        top: 0;
+                                        background: #000000;
+                                        color: #ffffff;
+                                        padding:16px 12px;
+                                        font-size:16px;
+                                        font-weight:800;
+                                        text-align:left;
+                                        z-index:5;
+                                    ">Side</th>
+
+                                    <th style="
+                                        position: sticky;
+                                        top: 0;
+                                        background: #000000;
+                                        color: #ffffff;
+                                        padding:16px 12px;
+                                        font-size:16px;
+                                        font-weight:800;
+                                        text-align:left;
+                                        z-index:5;
+                                    ">Qty</th>
+
+                                    <th style="
+                                        position: sticky;
+                                        top: 0;
+                                        background: #000000;
+                                        color: #ffffff;
+                                        padding:16px 12px;
+                                        font-size:16px;
+                                        font-weight:800;
+                                        text-align:left;
+                                        z-index:5;
+                                    ">Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+
+                    data.trades.forEach(trade => {
+
+                        const sideColor = trade.side === "BUY"
+                            ? "#16a34a"
+                            : "#dc2626";
+
+                        table += `
+                            <tr style="border-bottom:1px solid #e5e7eb;">
+                                <td style="padding:12px;">${trade.date}</td>
+                                <td style="padding:12px; font-weight:600;">${trade.ticker}</td>
+                                <td style="padding:12px; font-weight:700; color:${sideColor};">
+                                    ${trade.side}
+                                </td>
+                                <td style="padding:12px;">${trade.qty}</td>
+                                <td style="padding:12px;">$${trade.price}</td>
+                            </tr>
+                        `;
+                    });
+
+                    table += `
+                            </tbody>
+                        </table>
+                    `;
+
+                    content.innerHTML = table;
+
+                })
+                .catch(() => {
+                    content.innerHTML = `
+                        <div style="padding:20px;">
+                            Server error loading trades.
+                        </div>
+                    `;
+                });
+
+            });
+        }
+
+        if (closeBtn) {
+            closeBtn.addEventListener("click", () => {
+                overlay.style.display = "none";
+                document.body.style.overflow = "auto";
+            });
+        }
+
+        overlay.addEventListener("click", e => {
+            if (e.target === overlay) {
+                overlay.style.display = "none";
+                document.body.style.overflow = "auto";
+            }
+        });
+
+    });
+    </script>
+<!-- trade_history_modal_v4-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- performance_modal_v2-->
+
+    <div id="performance_overlay_v1" class="modal_overlay" style="display:none;">
+
+        <div class="modal_container" style="max-width:1000px; width: 95%;">
+
+            <div class="modal_header">
+                <div class="modal_title" id="performance_modal_title_v1">
+                    Performance Comparison
+                </div>
+                <div class="modal_close" id="performance_close_v1">
+                    &times;
+                </div>
+            </div>
+
+            <div class="modal_body" style="padding:0;">
+
+                <div id="performance_chart_container_v1"
+                     style="height:600px; width:97%; padding:10px; margin-bottom: 20px;">
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const overlay  = document.getElementById("performance_overlay_v1");
+        const closeBtn = document.getElementById("performance_close_v1");
+
+        ////////////////////////////////////////////////////////////
+        // Close Button
+        ////////////////////////////////////////////////////////////
+
+        if (closeBtn) {
+            closeBtn.addEventListener("click", function () {
+                overlay.style.display = "none";
+                document.body.style.overflow = "auto";
+            });
+        }
+
+        ////////////////////////////////////////////////////////////
+        // Click Outside To Close
+        ////////////////////////////////////////////////////////////
+
+        if (overlay) {
+            overlay.addEventListener("click", function (e) {
+
+                if (e.target === overlay) {
+                    overlay.style.display = "none";
+                    document.body.style.overflow = "auto";
+                }
+
+            });
+        }
+
+    });
+    </script>
+
+<!-- performance_modal_v2-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- stock_universe_modal_v3-->
+
+    <div id="stock_universe_overlay_v1" class="modal_overlay">
+
+        <div class="modal_container">
+
+            <div class="modal_header">
+                <div class="modal_title" id="stock_universe_title_v1">
+                    Stock Universe
+                </div>
+                <div class="modal_close" id="stock_universe_close_v1">
+                    &times;
+                </div>
+            </div>
+
+            <div class="modal_body"
+                 id="stock_universe_content_v1"
+                 style="max-height:500px; overflow-y:auto; padding:0;">
+
+                <div style="padding:20px;">
+                    Loading stock universe...
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+        const overlay  = document.getElementById("stock_universe_overlay_v1");
+        const closeBtn = document.getElementById("stock_universe_close_v1");
+        const content  = document.getElementById("stock_universe_content_v1");
+
+        const dropdownItems = document.querySelectorAll("#stock_universe_menu_v1 a");
+
+        let Y = 0;
+
+        while (Y < dropdownItems.length) {
+
+            const item = dropdownItems[Y];
+
+            item.addEventListener("click", (e) => {
+
+                e.preventDefault();
+
+                const range = item.dataset.range;
+
+                overlay.style.display = "flex";
+                document.body.style.overflow = "hidden";
+
+                document.getElementById("stock_universe_title_v1").innerText =
+                    "Stock Universe — " + range.toUpperCase();
+
+                content.innerHTML = `
+                    <div style="padding:20px;">
+                        Loading stock universe...
+                    </div>
+                `;
+
+                fetch("/api/stock_universe?range=" + range)
+                .then(res => res.json())
+                .then(data => {
+
+                    if (!data.success || !data.rows.length) {
+                        content.innerHTML = `
+                            <div style="padding:20px;">
+                                No stocks found for this range.
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    let table = `
+                        <table style="width:100%; border-collapse:collapse; font-size:14px;">
+                            <thead>
+                                <tr>
+                                    <th style="
+                                        position: sticky;
+                                        top: 0;
+                                        background: #000000;
+                                        color: #ffffff;
+                                        padding:16px 12px;
+                                        font-size:16px;
+                                        font-weight:800;
+                                        text-align:left;
+                                        z-index:5;
+                                    ">Ticker</th>
+
+                                    <th style="
+                                        position: sticky;
+                                        top: 0;
+                                        background: #000000;
+                                        color: #ffffff;
+                                        padding:16px 12px;
+                                        font-size:16px;
+                                        font-weight:800;
+                                        text-align:left;
+                                        z-index:5;
+                                    ">Company</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+
+                    let Z = 0;
+
+                    while (Z < data.rows.length) {
+
+                        table += `
+                            <tr style="border-bottom:1px solid #e5e7eb;">
+                                <td style="padding:12px; font-weight:600;">
+                                    ${data.rows[Z].ticker}
+                                </td>
+                                <td style="padding:12px;">
+                                    ${data.rows[Z].co_name}
+                                </td>
+                            </tr>
+                        `;
+
+                        Z += 1;
+                    }
+
+                    table += `
+                            </tbody>
+                        </table>
+                    `;
+
+                    content.innerHTML = table;
+
+                })
+                .catch(() => {
+                    content.innerHTML = `
+                        <div style="padding:20px;">
+                            Server error loading stock universe.
+                        </div>
+                    `;
+                });
+
+            });
+
+            Y += 1;
+        }
+
+        if (closeBtn) {
+            closeBtn.addEventListener("click", () => {
+                overlay.style.display = "none";
+                document.body.style.overflow = "auto";
+            });
+        }
+
+        overlay.addEventListener("click", e => {
+            if (e.target === overlay) {
+                overlay.style.display = "none";
+                document.body.style.overflow = "auto";
+            }
+        });
+
+    });
+    </script>
+<!-- stock_universe_modal_v3-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- trade_restrictions_modal_v3-->
+
+    <div id="trade_restrictions_overlay_v3" class="modal_overlay">
+
+        <div class="modal_container">
+
+            <div class="modal_header">
+                <div class="modal_title">
+                     Restricted Tickers
+                </div>
+                <div class="modal_close" id="trade_restrictions_close_v3">
+                    &times;
+                </div>
+            </div>
+
+            <div class="modal_body"
+                 id="trade_restrictions_content_v3"
+                 style="max-height:500px; overflow-y:auto; padding:0;">
+
+                <div style="padding:20px;">
+                    Loading trade restrictions...
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+
+            const overlay  = document.getElementById("trade_restrictions_overlay_v3");
+            const closeBtn = document.getElementById("trade_restrictions_close_v3");
+            const content  = document.getElementById("trade_restrictions_content_v3");
+            const trigger  = document.getElementById("open_trade_restrictions_btn_v5");
+
+            if (!overlay || !closeBtn || !content || !trigger) return;
+
+            ////////////////////////////////////////////////////////////
+            // Open Modal + Fetch
+            ////////////////////////////////////////////////////////////
+
+            trigger.addEventListener("click", (e) => {
+
+                e.preventDefault();
+
+                overlay.style.display = "flex";
+                document.body.style.overflow = "hidden";
+
+                content.innerHTML = `
+                    <div style="padding:20px;">
+                        Loading trade restrictions...
+                    </div>
+                `;
+
+                fetch("/api/trade_restrictions")
+                .then(res => res.json())
+                .then(data => {
+
+                    if (!data.success || !data.rows.length) {
+
+                        content.innerHTML = `
+                            <div style="padding:20px;">
+                                No active restrictions.
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    let table = `
+                        <table style="width:100%; border-collapse:collapse; font-size:14px;">
+                            <thead>
+                                <tr>
+                                    <th style="
+                                        position: sticky;
+                                        top: 0;
+                                        background: #000000;
+                                        color: #ffffff;
+                                        padding:16px 12px;
+                                        font-size:16px;
+                                        font-weight:800;
+                                        text-align:left;
+                                        z-index:5;
+                                    ">Ticker</th>
+
+                                    <th style="
+                                        position: sticky;
+                                        top: 0;
+                                        background: #000000;
+                                        color: #ffffff;
+                                        padding:16px 12px;
+                                        font-size:16px;
+                                        font-weight:800;
+                                        text-align:left;
+                                        z-index:5;
+                                    ">Restricted Until</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+
+                    let Y = 0;
+
+                    while (Y < data.rows.length) {
+
+                        table += `
+                            <tr style="border-bottom:1px solid #e5e7eb;">
+                                <td style="padding:12px; font-weight:600;">
+                                    ${data.rows[Y].ticker}
+                                </td>
+                                <td style="padding:12px;">
+                                    ${data.rows[Y].restricted_until}
+                                </td>
+                            </tr>
+                        `;
+
+                        Y += 1;
+                    }
+
+                    table += `
+                            </tbody>
+                        </table>
+                    `;
+
+                    content.innerHTML = table;
+
+                })
+                .catch(() => {
+
+                    content.innerHTML = `
+                        <div style="padding:20px;">
+                            Server error loading trade restrictions.
+                        </div>
+                    `;
+
+                });
+
+            });
+
+            ////////////////////////////////////////////////////////////
+            // Close Button
+            ////////////////////////////////////////////////////////////
+
+            closeBtn.addEventListener("click", () => {
+                overlay.style.display = "none";
+                document.body.style.overflow = "auto";
+            });
+
+            ////////////////////////////////////////////////////////////
+            // Click Outside Close
+            ////////////////////////////////////////////////////////////
+
+            overlay.addEventListener("click", e => {
+                if (e.target === overlay) {
+                    overlay.style.display = "none";
+                    document.body.style.overflow = "auto";
+                }
+            });
+
+        });
+    </script>
+
+<!-- trade_restrictions_modal_v3-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--block profile_modal_v2-->
+
+<div id="profile_overlay_v2" class="modal_overlay">
+
+    <div class="modal_container" style="max-width:520px;">
+
+        <div class="modal_header">
+            <div class="modal_title">
+                Profile
+            </div>
+            <div class="modal_close" id="profile_close_v2">
+                &times;
+            </div>
+        </div>
+
+        <div class="modal_body" id="profile_body_v2"
+             style="padding:40px 32px; text-align:center;">
+
+            Loading profile...
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const trigger  = document.getElementById("open_profile_modal_v2");
+    const overlay  = document.getElementById("profile_overlay_v2");
+    const closeBtn = document.getElementById("profile_close_v2");
+    const body     = document.getElementById("profile_body_v2");
+
+    if (!trigger || !overlay || !closeBtn || !body) return;
+
+    ////////////////////////////////////////////////////////////
+    // Open Modal + Fetch API
+    ////////////////////////////////////////////////////////////
+
+    trigger.addEventListener("click", function (e) {
+
+        e.preventDefault();
+
+        overlay.style.display = "flex";
+        document.body.style.overflow = "hidden";
+
+        body.innerHTML = "Loading profile...";
+
+        fetch("/api/profile_data")
+        .then(res => res.json())
+        .then(data => {
+
+            if (!data.success) {
+                body.innerHTML = "Failed to load profile.";
+                return;
+            }
+
+            const p = data.data;
+
+            body.innerHTML = `
+                <div style="margin-bottom:24px;">
+                    <div style="
+                        width:90px;
+                        height:90px;
+                        margin:0 auto;
+                        background:#e2e8f0;
+                        border-radius:50%;
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+                    ">
+                        <i class="fa-solid fa-user"
+                           style="font-size:48px; color:#334155;">
+                        </i>
+                    </div>
+                </div>
+
+                <div style="font-size:20px; font-weight:700; margin-bottom:6px;">
+                    ${p.username}
+                </div>
+
+                <div style="font-size:14px; color:#64748b; margin-bottom:20px;">
+                    ${p.email}
+                </div>
+
+                <div style="font-size:14px; margin-bottom:6px;">
+                    <strong>Account:</strong> ${p.account_type}
+                </div>
+
+                <div style="font-size:14px; margin-bottom:6px;">
+                    <strong>Risk Profile:</strong> ${p.risk_profile}
+                </div>
+
+                <div style="font-size:13px; color:#64748b; margin-top:20px;">
+                    Last Login: ${p.last_login}
+                </div>
+            `;
+
+        })
+        .catch(() => {
+            body.innerHTML = "Server error loading profile.";
+        });
+
+    });
+
+    ////////////////////////////////////////////////////////////
+    // Close Modal
+    ////////////////////////////////////////////////////////////
+
+    closeBtn.addEventListener("click", function () {
+        overlay.style.display = "none";
+        document.body.style.overflow = "auto";
+    });
+
+    overlay.addEventListener("click", function (e) {
+        if (e.target === overlay) {
+            overlay.style.display = "none";
+            document.body.style.overflow = "auto";
+        }
+    });
+
+});
+</script>
+
+<!--block profile_modal_v2-->
+
