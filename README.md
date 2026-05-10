@@ -57,6 +57,12 @@ Then open:
 http://127.0.0.1:5009
 ```
 
+If port `5009` is already in use, pick another port:
+
+```bash
+PORT=5010 python app.py
+```
+
 ## Git Basics
 
 Check local changes:
