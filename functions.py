@@ -55,23 +55,26 @@ print('functions read in ')
 
 def update_loading_page(driver, status_text):
 
-    driver.execute_script("""
-        var el = document.getElementById('status_text');
+    try:
+        driver.execute_script("""
+            var el = document.getElementById('status_text');
 
-        if (el){
+            if (el){
 
-            var newText = arguments[0];  // ✅ capture BEFORE timeout
+                var newText = arguments[0];  // ✅ capture BEFORE timeout
 
-            el.style.opacity = 0;
+                el.style.opacity = 0;
 
-            setTimeout(function(){
+                setTimeout(function(){
 
-                el.innerText = newText;  // ✅ use stored value
-                el.style.opacity = 1;
+                    el.innerText = newText;  // ✅ use stored value
+                    el.style.opacity = 1;
 
-            }, 120);
-        }
-    """, status_text)
+                }, 120);
+            }
+        """, status_text)
+    except Exception:
+        print(status_text)
 #Scrapers
 ##############################################################################################################
 
@@ -3843,7 +3846,6 @@ def robinhood_market_buy(ticker, input_amount, buy_in_type, live, driver):
 
 
 #end of the page 
-
 
 
 

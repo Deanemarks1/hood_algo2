@@ -27,6 +27,20 @@ from selenium.common.exceptions import (
 )
 
 
+def detect_chrome_version_main():
+    try:
+        import re
+        import subprocess
+
+        chrome_version = subprocess.check_output(
+            ["/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", "--version"]
+        ).decode("utf-8")
+        return int(re.search(r"\d+", chrome_version).group())
+
+    except Exception:
+        return None
+
+
 
 def create_driver_profile(profile_name="selenium_chrome_profile", headless=False):
 
@@ -96,7 +110,7 @@ def create_driver_profile(profile_name="selenium_chrome_profile", headless=False
     # -------------------------
     driver = uc.Chrome(
         options=options,
-        version_main=146,
+        version_main=detect_chrome_version_main(),
         use_subprocess=True
     )
 
@@ -204,7 +218,7 @@ def create_driver_profile_1(headless=False):
     # -------------------------
     driver = uc.Chrome(
         options=options,
-        version_main=146,
+        version_main=detect_chrome_version_main(),
         use_subprocess=True
     )
 

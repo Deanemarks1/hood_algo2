@@ -227,7 +227,11 @@ elif 'comradmarx' in base_dir:
     }
 
 else:
-    raise Exception("❌ Unknown environment — SQL_CONFIG not defined.")
+    SQL_CONFIG = {
+        "host": os.environ.get("MYSQL_HOST", "127.0.0.1"),
+        "user": os.environ.get("MYSQL_USER", "root"),
+        "password": os.environ.get("MYSQL_PASSWORD", "")
+    }
 
 
 set_global_config(SQL_CONFIG)
